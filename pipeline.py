@@ -78,6 +78,14 @@ def run_pipeline():
     # ===== 第4步: 存储历史 =====
     print("\n💾 第4步: 存储历史记录")
     add_record(sector_indices, analysis_results)
+
+    # 同时写入 SQLite 用于历史走势查询
+    try:
+        from history_store import save_all_sectors
+        save_all_sectors(sector_indices)
+        print("  ✅ SQLite 板块历史已更新")
+    except Exception as e:
+        print(f"  ⚠️ SQLite 存储失败: {e}")
     
     # ===== 第5步: 输出前端数据 =====
     dashboard = get_dashboard_data()

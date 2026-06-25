@@ -201,11 +201,60 @@ body {
 .card-share button { flex: 1; background: rgba(6,182,212,0.12); color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
 .card-share button:hover { background: rgba(6,182,212,0.2); }
 
+.card-mini-chart {
+  margin-top: 12px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid rgba(51, 65, 85, 0.3);
+}
+.card-mini-chart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.card-mini-chart-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+}
+.card-mini-chart-label .trend-up { color: #f87171; font-weight: 700; }
+.card-mini-chart-label .trend-down { color: #4ade80; font-weight: 700; }
+.card-mini-chart canvas { width: 100% !important; height: 50px !important; }
+.card-mini-chart-hint {
+  font-size: 10px;
+  color: #475569;
+  text-align: center;
+  margin-top: 4px;
+}
+
 .poster-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
 .poster-modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
 .poster-modal { max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
 .poster-modal canvas { max-width: 100%; height: auto; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
 .poster-modal-actions { display: flex; gap: 10px; width: 100%; justify-content: center; }
+
+/* 走势详情弹窗 */
+.chart-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2500; padding: 20px; }
+.chart-modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
+.chart-modal { max-width: 720px; width: 100%; max-height: 90vh; overflow-y: auto; background: #0f172a; border-radius: 16px; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
+.chart-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; }
+.chart-modal-title { font-size: 20px; font-weight: 700; color: #f1f5f9; }
+.chart-modal-close { background: none; border: none; color: #94a3b8; font-size: 28px; cursor: pointer; width: 36px; height: 36px; line-height: 1; }
+.chart-modal-close:hover { color: #f1f5f9; }
+.chart-modal-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.chart-modal-tab { flex:1; background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.chart-modal-tab.active { background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; border-color: transparent; }
+.chart-modal-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.chart-modal-stat { background: #1e293b; padding: 12px; border-radius: 10px; text-align: center; }
+.chart-modal-stat .val { font-size: 22px; font-weight: 800; color: #f1f5f9; }
+.chart-modal-stat .lbl { font-size: 11px; color: #64748b; margin-top: 2px; }
+.chart-modal-chart-box { background: #1e293b; border-radius: 12px; padding: 16px; }
+.chart-modal-chart-box canvas { max-height: 320px !important; }
+.chart-modal-empty { text-align: center; padding: 40px; color: #64748b; }
 
 /* 加载状态 */
 .loading { text-align: center; padding: 60px; color: #64748b; }
@@ -338,6 +387,25 @@ body {
   </div>
 </div>
 
+<!-- 走势详情弹窗 -->
+<div class="chart-modal-overlay" id="chart-modal">
+  <div class="chart-modal">
+    <div class="chart-modal-header">
+      <div class="chart-modal-title" id="chart-modal-title">📈 历史走势</div>
+      <button class="chart-modal-close" onclick="closeSectorChart()">×</button>
+    </div>
+    <div class="chart-modal-tabs">
+      <button class="chart-modal-tab active" onclick="switchDetailDays(7)">近 7 日</button>
+      <button class="chart-modal-tab" onclick="switchDetailDays(14)">近 14 日</button>
+      <button class="chart-modal-tab" onclick="switchDetailDays(30)">近 30 日</button>
+    </div>
+    <div class="chart-modal-stat-grid" id="chart-stats"></div>
+    <div class="chart-modal-chart-box" id="chart-detail-box">
+      <canvas id="chart-detail-canvas" height="320"></canvas>
+    </div>
+  </div>
+</div>
+
 <!-- 海报弹窗 -->
 <div class="poster-modal-overlay" id="poster-modal">
   <div class="poster-modal">
@@ -442,6 +510,15 @@ function renderCards(data) {
         </div>
         <div class="card-share">
           <button onclick="openSectorPoster('${key}')">📸 分享此板块</button>
+          <button onclick="openSectorChart('${key}')">📈 历史走势</button>
+        </div>
+        <div class="card-mini-chart" id="mini-${key}" onclick="openSectorChart('${key}')">
+          <div class="card-mini-chart-label">
+            <span>近7日走势</span>
+            <span id="mini-${key}-trend">—</span>
+          </div>
+          <canvas id="mini-canvas-${key}"></canvas>
+          <div class="card-mini-chart-hint">👆 点击查看完整走势</div>
         </div>
       </div>
     `;
@@ -506,6 +583,176 @@ function renderCharts(data) {
         // 通过 annotation 插件可以实现，这里保持简洁
       }
     });
+  });
+}
+
+// ===== 板块 mini 走势图 + 详情弹窗 =====
+const __miniCharts = {};
+const __sectorDetailCharts = {};
+let __currentDetailDays = 7;
+
+function renderAllMiniCharts(data) {
+  const history = data.sector_history || {};
+  Object.entries(history).forEach(([sector, records]) => {
+    if (!records.length) return;
+    const recent = records.slice(-7);
+    const canvas = document.getElementById(`mini-canvas-${sector}`);
+    if (!canvas) return;
+    const color = SECTOR_COLORS[sector] || '#94a3b8';
+    const trendEl = document.getElementById(`mini-${sector}-trend`);
+    // 趋势计算
+    if (recent.length >= 2 && trendEl) {
+      const first = recent[0].index;
+      const last = recent[recent.length - 1].index;
+      const diff = (last - first).toFixed(1);
+      const up = last > first;
+      trendEl.textContent = (up ? '▲ ' : '▼ ') + Math.abs(diff) + ' 近7日';
+      trendEl.className = up ? 'trend-up' : 'trend-down';
+    }
+    // 销毁旧实例
+    if (__miniCharts[sector]) {
+      __miniCharts[sector].destroy();
+    }
+    const ctx = canvas.getContext('2d');
+    __miniCharts[sector] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: recent.map(r => r.date.slice(5)),
+        datasets: [{
+          data: recent.map(r => r.index),
+          borderColor: color,
+          backgroundColor: color + '33',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+          pointRadius: 0,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false, min: 0, max: 100 }
+        }
+      }
+    });
+  });
+}
+
+function openSectorChart(sectorKey) {
+  const data = window.__dashboardData;
+  const color = SECTOR_COLORS[sectorKey] || '#94a3b8';
+  const history = (data && data.sector_history && data.sector_history[sectorKey]) || [];
+  const name = SECTOR_NAMES[sectorKey] || sectorKey;
+  const latest = (data && data.latest && data.latest.sectors && data.latest.sectors[sectorKey]) || {};
+  const details = latest.details || {};
+
+  document.getElementById('chart-modal-title').textContent = `📈 ${name} · 历史走势`;
+  document.getElementById('chart-modal').style.borderTop = `3px solid ${color}`;
+
+  // 统计
+  const current = latest.index || 0;
+  const history7 = history.slice(-7);
+  const history30 = history.slice(-30);
+  const avg30 = history30.length ? (history30.reduce((s, r) => s + r.index, 0) / history30.length).toFixed(1) : current;
+  const max30 = history30.length ? Math.max(...history30.map(r => r.index)).toFixed(1) : current;
+  const min30 = history30.length ? Math.min(...history30.map(r => r.index)).toFixed(1) : current;
+
+  document.getElementById('chart-stats').innerHTML = `
+    <div class="chart-modal-stat"><div class="val" style="color:${color}">${current}</div><div class="lbl">当前指数</div></div>
+    <div class="chart-modal-stat"><div class="val">${avg30}</div><div class="lbl">30日均值</div></div>
+    <div class="chart-modal-stat"><div class="val">${max30}</div><div class="lbl">30日最高</div></div>
+    <div class="chart-modal-stat"><div class="val">${min30}</div><div class="lbl">30日最低</div></div>
+    <div class="chart-modal-stat"><div class="val">${details.newbie_ratio || 0}%</div><div class="lbl">小白占比</div></div>
+    <div class="chart-modal-stat"><div class="val">${details.buy_sell_ratio || 0}</div><div class="lbl">买卖比</div></div>
+  `;
+
+  __currentDetailDays = 7;
+  updateDetailChart(sectorKey, 7);
+  document.getElementById('chart-modal').dataset.sector = sectorKey;
+  document.getElementById('chart-modal').classList.add('show');
+}
+
+function closeSectorChart() {
+  document.getElementById('chart-modal').classList.remove('show');
+}
+
+function switchDetailDays(days) {
+  const sector = document.getElementById('chart-modal').dataset.sector;
+  if (!sector) return;
+  __currentDetailDays = days;
+  document.querySelectorAll('.chart-modal-tab').forEach(t => t.classList.remove('active'));
+  event && event.target && event.target.classList.add('active');
+  updateDetailChart(sector, days);
+}
+
+function updateDetailChart(sectorKey, days) {
+  const data = window.__dashboardData;
+  const history = (data && data.sector_history && data.sector_history[sectorKey]) || [];
+  const color = SECTOR_COLORS[sectorKey] || '#94a3b8';
+  const recent = history.slice(-days);
+
+  if (!recent.length) {
+    document.getElementById('chart-detail-box').innerHTML =
+      '<div class="chart-modal-empty">暂无历史数据，请先运行 pipeline.py 采集几天数据</div>';
+    return;
+  }
+
+  if (__sectorDetailCharts[sectorKey]) {
+    __sectorDetailCharts[sectorKey].destroy();
+  }
+  const ctx = document.getElementById('chart-detail-canvas').getContext('2d');
+  __sectorDetailCharts[sectorKey] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: recent.map(r => r.date.slice(5)),
+      datasets: [{
+        label: '宝妈指数',
+        data: recent.map(r => r.index),
+        borderColor: color,
+        backgroundColor: color + '30',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.35,
+        pointRadius: 3,
+        pointHoverRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: '#1e293b',
+          titleColor: '#e2e8f0',
+          bodyColor: '#cbd5e1',
+          borderColor: '#334155',
+          borderWidth: 1,
+          callbacks: {
+            title: items => items[0].label,
+            label: ctx => `指数: ${ctx.parsed.y}`,
+            afterLabel: (ctx) => {
+              const rec = recent[ctx.dataIndex];
+              return rec && rec.interpretation ? rec.interpretation : '';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          min: 0, max: 100,
+          grid: { color: '#33415533' },
+          ticks: { color: '#64748b' }
+        },
+        x: {
+          grid: { color: '#33415533' },
+          ticks: { color: '#64748b', maxTicksLimit: 12 }
+        }
+      }
+    }
   });
 }
 
@@ -631,10 +878,14 @@ document.getElementById('post-modal').addEventListener('click', e => {
 document.getElementById('poster-modal').addEventListener('click', e => {
   if (e.target.id === 'poster-modal') closePoster();
 });
+document.getElementById('chart-modal').addEventListener('click', e => {
+  if (e.target.id === 'chart-modal') closeSectorChart();
+});
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeModal();
     closePoster();
+    closeSectorChart();
   }
 });
 
@@ -668,7 +919,8 @@ fetch('data/dashboard_data.json')
     renderCharts(data);
     initSectorFilter(data);
     renderTopPosts(data, '__all__');
-    // Enter 键搜索
+    renderAllMiniCharts(data);
+    // 进入键搜索
     document.getElementById('stock-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchStock();
     });

@@ -431,6 +431,50 @@ class QueryHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": f"服务器错误: {e}"}, 500)
             return
 
+        # 板块历史（用于看板走势图）
+        if path == "/api/history" and "sector" in params:
+            sector = params.get("sector", [""])[0]
+            days_str = params.get("days", ["30"])[0]
+            from_date = params.get("from", [None])[0]
+            to_date = params.get("to", [None])[0]
+            try:
+                days = int(days_str)
+            except ValueError:
+                days = 30
+            try:
+                from history_store import get_sector_history
+                history = get_sector_history(sector, days=days,
+                                            from_date=from_date, to_date=to_date)
+                self._send_json({"sector": sector, "data": history})
+            except Exception as e:
+                self._send_json({"error": f"获取历史失败: {e}"}, 500)
+            return
+
+        # 全板块历史（一次返回，供看板使用）
+        if path == "/api/history/all":
+            days_str = params.get("days", ["30"])[0]
+            try:
+                days = int(days_str)
+            except ValueError:
+                days = 30
+            try:
+                from history_store import get_all_sectors_history
+                all_history = get_all_sectors_history(days=days)
+                self._send_json({"days": days, "sectors": all_history})
+            except Exception as e:
+                self._send_json({"error": f"获取历史失败: {e}"}, 500)
+            return
+
+        # 列表所有有历史的板块
+        if path == "/api/sectors":
+            try:
+                from history_store import list_sectors
+                sectors = list_sectors()
+                self._send_json({"sectors": sectors})
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return
+
         # 健康检查
         if path == "/api/health":
             self._send_json({"status": "ok", "version": "1.0"})
