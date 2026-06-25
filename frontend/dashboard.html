@@ -1551,6 +1551,9 @@ fetch('data/dashboard_data.json')
     startQuotePolling();
     // 启动跨境 ETF 溢价 mini 排行
     startCrossBorderPolling();
+    // 静默后台拉取 11 板块实时帖子，仅更新底部"今日最'小白'的帖子"列表
+    // （解决 dashboard 底部用静态 JSON 数据、看起来和搜索页实时数据不一致的问题）
+    __silentRefreshTopList();
     // 进入键搜索
     document.getElementById('stock-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchStock();
@@ -1911,6 +1914,42 @@ async function refreshAllSectors() {
 
   // 3s 后清空进度
   setTimeout(() => { progress.textContent = ''; }, 3000);
+}
+
+// ============ 静默后台拉取实时帖子（仅更新底部列表）============
+// 页面打开后自动触发：不重渲染卡片（避免视觉跳动），只拉数据 + 重渲底部
+async function __silentRefreshTopList() {
+  const sectorKeys = Object.keys(window.__sectorQuoteCodes);
+  if (!sectorKeys.length) return;
+  console.log('[silent-refresh] 开始后台拉取 11 板块实时帖子…');
+  let ok = 0, fail = 0;
+  for (const key of sectorKeys) {
+    try {
+      const code = window.__sectorQuoteCodes[key];
+      const resp = await fetch(`/api/query?code=${encodeURIComponent(normalizeCode(code))}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error);
+      const posts = data.sample_posts || [];
+      if (!posts.length) { fail++; continue; }
+      // 同步数据到 window.__dashboardData（不重渲染卡片）
+      if (window.__dashboardData && window.__dashboardData.latest && window.__dashboardData.latest.sectors) {
+        const sec = window.__dashboardData.latest.sectors[key] || {};
+        sec.top_newbie_posts = posts.slice(0, 5);
+        window.__dashboardData.latest.sectors[key] = sec;
+      }
+      ok++;
+    } catch (e) {
+      console.warn(`[silent-refresh] ${key} 失败:`, e);
+      fail++;
+    }
+    // 间隔 800ms，避免后端 / 股吧反爬触发
+    await new Promise(r => setTimeout(r, 800));
+  }
+  // 拉完后只重渲染底部列表（卡片保持原 pipeline 数据，不闪）
+  const currentFilter = document.getElementById('sector-filter').value;
+  renderTopPosts(window.__dashboardData, currentFilter);
+  console.log(`[silent-refresh] 完成 ✓${ok} ✗${fail}`);
 }
 
 // 简易 toast 提示
