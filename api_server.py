@@ -591,7 +591,7 @@ class QueryHandler(BaseHTTPRequestHandler):
         # 静态文件 (含 data/ 目录)
         if path.startswith("/static/") or path.startswith("/data/") \
             or path.startswith("/assets/") \
-            or path.endswith((".js", ".css", ".png", ".svg", ".ico", ".json", ".html")):
+            or path.endswith((".js", ".css", ".png", ".svg", ".ico", ".json", ".html", ".txt", ".xml")):
             rel = path.lstrip("/")
             # 防止目录穿越
             if ".." in rel:
@@ -607,6 +607,8 @@ class QueryHandler(BaseHTTPRequestHandler):
                 elif rel.endswith(".html"): ct = "text/html"
                 elif rel.endswith(".svg"): ct = "image/svg+xml"
                 elif rel.endswith(".png"): ct = "image/png"
+                elif rel.endswith(".xml"): ct = "application/xml"
+                elif rel.endswith(".txt"): ct = "text/plain; charset=utf-8"
                 self._send_file(full, ct)
                 return
 
