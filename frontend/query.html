@@ -141,6 +141,18 @@
     .modal-btn-primary { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; }
     .modal-btn-secondary { background: #334155; color: #cbd5e1; }
 
+    .poster-actions { display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #334155; }
+    .poster-btn { background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+    .poster-btn:hover { opacity: 0.85; }
+    .poster-btn.secondary { background: #334155; }
+    .poster-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .poster-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+    .poster-modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
+    .poster-modal { max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+    .poster-modal canvas { max-width: 100%; height: auto; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
+    .poster-modal-actions { display: flex; gap: 10px; width: 100%; justify-content: center; }
+
     .footer { text-align: center; padding: 32px 0; color: #475569; font-size: 12px; }
   </style>
 </head>
@@ -195,12 +207,23 @@
       <div id="r-posts"></div>
     </div>
 
-    <div class="footer">
-      数据来源: 东方财富股吧 · 实时采集 · LLM 分析<br>
-      指数越高 = 小白越活跃 = 市场情绪越危险<br>
-      <span style="color:#64748b">⚠️ 仅供参考，不构成投资建议</span>
+      <div class="footer">
+        数据来源: 东方财富股吧 · 实时采集 · LLM 分析<br>
+        指数越高 = 小白越活跃 = 市场情绪越危险<br>
+        <span style="color:#64748b">⚠️ 仅供参考，不构成投资建议</span>
+      </div>
     </div>
-  </div>
+
+    <div class="poster-modal-overlay" id="poster-modal">
+      <div class="poster-modal">
+        <canvas id="poster-canvas" width="900" height="1600"></canvas>
+        <div class="poster-modal-actions">
+          <button class="poster-btn" onclick="downloadPoster()">⬇️ 下载图片</button>
+          <button class="poster-btn secondary" onclick="closePoster()">关闭</button>
+        </div>
+        <div style="font-size:12px;color:#64748b;text-align:center;">长按图片即可保存到手机 · 分享到朋友圈 / 小红书</div>
+      </div>
+    </div>
 
   <!-- 详情弹窗 -->
   <div class="modal-overlay" id="post-modal">
@@ -378,6 +401,20 @@
         </div>
       `;
 
+      // 分享按钮（放在统计卡片下方，帖子列表上方）
+      if (data.index_data) {
+        if (!document.getElementById('poster-actions')) {
+          const actions = document.createElement('div');
+          actions.id = 'poster-actions';
+          actions.className = 'poster-actions';
+          actions.innerHTML = `
+            <button class="poster-btn" onclick="openPoster()">📸 生成分享海报</button>
+          `;
+          const target = document.getElementById('r-stats').nextSibling;
+          document.getElementById('result').insertBefore(actions, target);
+        }
+      }
+
       // 帖子列表
       const posts = data.sample_posts || [];
       if (!posts.length) {
@@ -402,6 +439,8 @@
       }
 
       document.getElementById('result').classList.add('show');
+
+      window._lastResult = data;
       document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -438,6 +477,240 @@
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') closeModal();
     });
+
+    function openPoster() {
+      const data = window._lastResult;
+      if (!data) return;
+      drawPoster(data);
+      document.getElementById('poster-modal').classList.add('show');
+    }
+    function closePoster() {
+      document.getElementById('poster-modal').classList.remove('show');
+    }
+    function downloadPoster() {
+      const canvas = document.getElementById('poster-canvas');
+      const link = document.createElement('a');
+      const stock = window._lastResult.code_info.display || 'stock';
+      link.download = `宝妈指数_${stock}_${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+    document.getElementById('poster-modal').addEventListener('click', e => {
+      if (e.target.id === 'poster-modal') closePoster();
+    });
+
+    // ===== 海报绘制（简洁 / 有张力风格）=====
+    function drawPoster(data) {
+      const canvas = document.getElementById('poster-canvas');
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+
+      const info = data.code_info;
+      const idx = data.index_data;
+      const stats = idx && idx.details ? idx.details : {};
+      const posts = data.sample_posts || [];
+      const topPosts = posts.slice(0, 3);
+      const dateStr = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit' });
+
+      // 主色根据指数变化
+      const score = idx ? idx.index : 0;
+      let accent;
+      if (score >= 70) accent = '#ef4444';
+      else if (score >= 50) accent = '#f97316';
+      else if (score >= 30) accent = '#f59e0b';
+      else accent = '#06b6d4';
+
+      // 背景：深色渐变 + 装饰光斑
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#0b1220');
+      bg.addColorStop(1, '#1a0f1f');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, W, H);
+
+      // 装饰光斑
+      const g1 = ctx.createRadialGradient(W * 0.2, H * 0.15, 0, W * 0.2, H * 0.15, 400);
+      g1.addColorStop(0, accent + '55');
+      g1.addColorStop(1, 'transparent');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, W, H);
+
+      const g2 = ctx.createRadialGradient(W * 0.85, H * 0.75, 0, W * 0.85, H * 0.75, 350);
+      g2.addColorStop(0, accent + '33');
+      g2.addColorStop(1, 'transparent');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, W, H);
+
+      // 顶部：标题 + Logo
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = '600 28px -apple-system, "PingFang SC", sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText('宝妈指数 · MOM INDEX', 60, 60);
+
+      ctx.font = '400 22px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('散户小白情绪温度计', 60, 98);
+
+      // 分割线
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(60, 150);
+      ctx.lineTo(180, 150);
+      ctx.stroke();
+
+      // 股票名称 + 代码
+      ctx.font = '800 56px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillText(info.display + (info.market ? ' · ' + info.market : ''), 60, 180);
+
+      ctx.font = '500 26px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText('代码: ' + (info.guba_code || ''), 60, 245);
+
+      // 超大指数数字（张力核心）
+      ctx.save();
+      ctx.font = '900 220px -apple-system, sans-serif';
+      ctx.fillStyle = accent;
+      ctx.textAlign = 'center';
+      ctx.fillText(score.toFixed(0), W / 2, 320);
+
+      // 指数说明
+      ctx.font = '500 26px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#e2e8f0';
+      const label = score >= 70 ? '🔥 极度亢奋'
+                 : score >= 50 ? '🟠 情绪升温'
+                 : score >= 30 ? '🟡 温和乐观'
+                 : '🟢 理性冷静';
+      ctx.fillText(label, W / 2, 560);
+      ctx.restore();
+
+      // 解读（大字）
+      if (idx && idx.interpretation) {
+        ctx.font = '500 24px -apple-system, "PingFang SC", sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.textAlign = 'center';
+        wrapText(ctx, idx.interpretation.split('—')[1] || idx.interpretation, W / 2, 620, 780, 36);
+      }
+
+      // 统计卡片区
+      ctx.textAlign = 'left';
+      const cardY = 740;
+      const cardH = 180;
+      const cols = 3;
+      const colW = (W - 120) / cols;
+      const cards = [
+        { label: '抓取帖子', value: data.post_count },
+        { label: '小白占比', value: (stats.newbie_ratio || 0) + '%' },
+        { label: '宝妈卖出', value: stats.mom_sell_index || 0 },
+      ];
+      cards.forEach((c, i) => {
+        const x = 60 + i * colW;
+        roundRect(ctx, x + 10, cardY, colW - 20, cardH, 20, '#ffffff12', '#ffffff1a');
+        ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillText(c.label, x + 30, cardY + 36);
+        ctx.font = '800 54px -apple-system, sans-serif';
+        ctx.fillStyle = accent;
+        ctx.fillText(String(c.value), x + 30, cardY + 110);
+      });
+
+      // 白分割线
+      ctx.strokeStyle = '#ffffff1f';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(60, cardY + cardH + 40);
+      ctx.lineTo(W - 60, cardY + cardH + 40);
+      ctx.stroke();
+
+      // Top 帖子
+      ctx.font = '700 28px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillText('🔥 今日最小白 Top ' + topPosts.length, 60, cardY + cardH + 90);
+
+      let py = cardY + cardH + 140;
+      topPosts.forEach((p, i) => {
+        const isPure = p.score >= 50;
+        // 编号圆
+        ctx.beginPath();
+        ctx.fillStyle = isPure ? '#ef4444' : accent;
+        ctx.arc(90, py + 20, 22, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff';
+        ctx.font = '700 22px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(String(i + 1), 90, py + 28);
+        ctx.textAlign = 'left';
+
+        // 分数徽章
+        ctx.font = '600 22px -apple-system, sans-serif';
+        ctx.fillStyle = isPure ? '#fca5a5' : '#fcd34d';
+        ctx.fillText(`${p.score}分 · ${isPure ? '纯小白' : '偏小白'}`, 130, py + 22);
+
+        // 标题（换行）
+        ctx.font = '600 24px -apple-system, "PingFang SC", sans-serif';
+        ctx.fillStyle = '#e2e8f0';
+        const lines = wrapTextLines(ctx, p.title, 130, W - 180, 34);
+        lines.slice(0, 2).forEach((ln, li) => {
+          ctx.fillText(ln, 130, py + 60 + li * 34);
+        });
+
+        // 意图
+        if (p.intent_label) {
+          ctx.font = '400 20px -apple-system, "PingFang SC", sans-serif';
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillText(p.intent_label, 130, py + 140);
+        }
+        py += 170;
+      });
+
+      // 底部：日期 + 水印
+      ctx.textAlign = 'center';
+      ctx.font = '400 22px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('📅 ' + dateStr + '    ·    宝妈指数', W / 2, H - 90);
+
+      ctx.font = '600 20px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = accent;
+      ctx.fillText('仅供参考 · 不构成投资建议', W / 2, H - 55);
+    }
+
+    function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+      if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const lines = wrapTextLines(ctx, text, x, maxWidth, lineHeight);
+      lines.forEach((ln, i) => ctx.fillText(ln, x, y + i * lineHeight));
+    }
+    function wrapTextLines(ctx, text, x, maxWidth) {
+      if (!text) return [];
+      const lines = [];
+      let line = '';
+      // 逐字换行（支持中文）
+      for (let i = 0; i < text.length; i++) {
+        const test = line + text[i];
+        if (ctx.measureText(test).width > maxWidth && line.length) {
+          lines.push(line);
+          line = text[i];
+        } else {
+          line = test;
+        }
+      }
+      if (line) lines.push(line);
+      return lines;
+    }
   </script>
 </body>
 </html>

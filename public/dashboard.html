@@ -193,6 +193,20 @@ body {
 
 .footer { text-align: center; padding: 32px; color: #475569; font-size: 12px; }
 
+.share-bar { display:flex; gap:10px; justify-content:center; margin: 0 0 16px 0; flex-wrap:wrap; }
+.share-btn { background: linear-gradient(90deg, #f59e0b, #ef4444); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.share-btn:hover { opacity: 0.85; }
+.share-btn.secondary { background: #334155; }
+.card-share { margin-top: 12px; display:flex; gap:6px; }
+.card-share button { flex: 1; background: rgba(6,182,212,0.12); color: #67e8f9; border: 1px solid rgba(6,182,212,0.3); padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.card-share button:hover { background: rgba(6,182,212,0.2); }
+
+.poster-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+.poster-modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
+.poster-modal { max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
+.poster-modal canvas { max-width: 100%; height: auto; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
+.poster-modal-actions { display: flex; gap: 10px; width: 100%; justify-content: center; }
+
 /* 加载状态 */
 .loading { text-align: center; padding: 60px; color: #64748b; }
 
@@ -211,6 +225,10 @@ body {
 </div>
 
 <div class="container">
+  <div class="share-bar">
+    <button class="share-btn" onclick="openDashboardPoster()">📸 生成今日看板海报</button>
+    <button class="share-btn secondary" onclick="shareLink()">🔗 复制当前链接</button>
+  </div>
   <!-- 股票搜索 -->
   <div class="stock-search">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
@@ -317,6 +335,18 @@ body {
   </div>
 </div>
 
+<!-- 海报弹窗 -->
+<div class="poster-modal-overlay" id="poster-modal">
+  <div class="poster-modal">
+    <canvas id="poster-canvas" width="900" height="1900"></canvas>
+    <div class="poster-modal-actions">
+      <button class="share-btn" onclick="downloadPoster()">⬇️ 下载图片</button>
+      <button class="share-btn secondary" onclick="closePoster()">关闭</button>
+    </div>
+    <div style="font-size:12px;color:#64748b;text-align:center;">长按图片即可保存到手机 · 分享到朋友圈 / 小红书</div>
+  </div>
+</div>
+
 <script>
 const SECTOR_NAMES = {
   nasdaq: '纳斯达克',
@@ -406,6 +436,9 @@ function renderCards(data) {
         </div>
         <div class="detail-row">
           <span>买卖比</span><span style="color:${(d.buy_sell_ratio||0)>1.5?'#f87171':(d.buy_sell_ratio||0)>0.8?'#facc15':'#4ade80'}">${d.buy_sell_ratio||0}:1 ${(d.buy_sell_ratio||0)>1.5?'🔥追涨':(d.buy_sell_ratio||0)>0.8?'⚖️平衡':'🩸恐慌'}</span>
+        </div>
+        <div class="card-share">
+          <button onclick="openSectorPoster('${key}')">📸 分享此板块</button>
         </div>
       </div>
     `;
@@ -592,8 +625,14 @@ function closeModal() {
 document.getElementById('post-modal').addEventListener('click', e => {
   if (e.target.id === 'post-modal') closeModal();
 });
+document.getElementById('poster-modal').addEventListener('click', e => {
+  if (e.target.id === 'poster-modal') closePoster();
+});
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+    closePoster();
+  }
 });
 
 // 初始化板块下拉选项
@@ -732,9 +771,12 @@ function renderSearchResult(sectorKey) {
         <div style="font-size:11px; color:#64748b; margin-top:12px;">📈 近 ${history.length} 天走势</div>
         <div class="search-result-mini-chart"><canvas id="mini-chart-${sectorKey}"></canvas></div>
       ` : ''}
-      <div style="display:flex; gap:8px; margin-top:12px;">
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
         <button class="modal-btn modal-btn-primary" style="font-size:12px; padding:6px 12px;" onclick="jumpToSector('${sectorKey}')">
           🎯 跳转到该板块筛选
+        </button>
+        <button class="modal-btn modal-btn-primary" style="font-size:12px; padding:6px 12px; background:linear-gradient(90deg,#f59e0b,#ef4444);" onclick="openSectorPoster('${sectorKey}')">
+          📸 生成海报
         </button>
         ${history.length ? `<button class="modal-btn modal-btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="document.getElementById('chart-${sectorKey}').scrollIntoView({behavior:'smooth', block:'center'}); document.getElementById('chart-${sectorKey}').style.outline='2px solid ${color}'; setTimeout(()=>document.getElementById('chart-${sectorKey}').style.outline='',2000)">
           📊 查看完整走势图
@@ -781,6 +823,235 @@ function jumpToSector(sectorKey) {
   renderTopPosts(window.__dashboardData, sectorKey);
   // 滚动到 Top 小白帖区块
   document.getElementById('top-posts').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ====== 海报生成（看板 & 板块）======
+let __posterMode = null; // 'dashboard' | 'sector'
+let __posterSector = null;
+
+function openDashboardPoster() {
+  __posterMode = 'dashboard';
+  drawPoster();
+  document.getElementById('poster-modal').classList.add('show');
+}
+function openSectorPoster(sectorKey) {
+  __posterMode = 'sector';
+  __posterSector = sectorKey;
+  drawPoster();
+  document.getElementById('poster-modal').classList.add('show');
+}
+function closePoster() {
+  document.getElementById('poster-modal').classList.remove('show');
+}
+function downloadPoster() {
+  const canvas = document.getElementById('poster-canvas');
+  const stock = __posterMode === 'sector' ? (SECTOR_NAMES[__posterSector] || 'sector') : 'mom_index';
+  const link = document.createElement('a');
+  link.download = `宝妈指数_${stock}_${Date.now()}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+function shareLink() {
+  const url = window.location.href;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('🔗 链接已复制到剪贴板！\n\n' + url);
+    }).catch(() => {
+      prompt('复制下面的链接分享：', url);
+    });
+  } else {
+    prompt('复制下面的链接分享：', url);
+  }
+}
+
+function drawPoster() {
+  const canvas = document.getElementById('poster-canvas');
+  const ctx = canvas.getContext('2d');
+  const data = window.__dashboardData;
+  if (!data) return;
+
+  const dateStr = data.latest ? data.latest.date : new Date().toLocaleDateString('zh-CN');
+
+  // 动态调整高度
+  let targetH = 1900;
+  if (__posterMode === 'dashboard') {
+    const sectorsCount = Object.keys(data.latest.sectors || {}).length;
+    targetH = 380 + sectorsCount * 97;
+    if (targetH < 1500) targetH = 1500;
+    canvas.height = targetH;
+  } else {
+    canvas.height = 1600;
+  }
+
+  const W = canvas.width;
+  const H = canvas.height;
+
+  // 背景
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#0b1220');
+  bg.addColorStop(1, '#1a0f1f');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // 顶部光斑（固定橙色，呼应主品牌）
+  const g1 = ctx.createRadialGradient(W * 0.2, 150, 0, W * 0.2, 150, 400);
+  g1.addColorStop(0, 'rgba(245,158,11,0.45)');
+  g1.addColorStop(1, 'transparent');
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+
+  // 顶部标题
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '700 36px -apple-system, "PingFang SC", sans-serif';
+  ctx.textBaseline = 'top';
+  ctx.fillText('👩‍👧 宝妈指数', 60, 60);
+
+  ctx.font = '500 24px -apple-system, "PingFang SC", sans-serif';
+  ctx.fillStyle = '#64748b';
+  ctx.fillText('散户小白情绪温度计 · MOM INDEX', 60, 110);
+
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(60, 160);
+  ctx.lineTo(180, 160);
+  ctx.stroke();
+
+  if (__posterMode === 'dashboard') {
+    // 看板模式：列出所有板块
+    ctx.font = '700 34px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#f1f5f9';
+    ctx.fillText('📊 今日全板块情绪', 60, 200);
+
+    const sectors = Object.entries(data.latest.sectors);
+    const rowH = 85;
+    let y = 280;
+    sectors.forEach(([key, sector]) => {
+      const color = SECTOR_COLORS[key] || '#06b6d4';
+      const score = sector.index;
+      const name = SECTOR_NAMES[key] || key;
+      const signal = score >= 75 ? '极度亢奋' : score >= 60 ? '情绪升温' : score >= 40 ? '温和乐观' : score >= 20 ? '理性冷静' : '极度冷清';
+
+      // 行背景
+      ctx.fillStyle = '#ffffff0d';
+      ctx.fillRect(60, y, W - 120, rowH);
+      ctx.strokeStyle = color + '66';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(60, y, W - 120, rowH);
+
+      // 左边色条
+      ctx.fillStyle = color;
+      ctx.fillRect(60, y, 6, rowH);
+
+      // 名称
+      ctx.font = '700 28px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#f1f5f9';
+      ctx.fillText(name, 90, y + 20);
+
+      // 分数（大）
+      ctx.font = '800 44px -apple-system, sans-serif';
+      ctx.fillStyle = color;
+      ctx.textAlign = 'right';
+      ctx.fillText(score.toFixed(1), W - 200, y + 12);
+
+      // 信号
+      ctx.font = '500 22px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.textAlign = 'left';
+      ctx.fillText(signal, 90, y + 58);
+
+      // 小白占比
+      const d = sector.details || {};
+      ctx.font = '500 22px -apple-system, sans-serif';
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'right';
+      ctx.fillText(`小白占比 ${d.newbie_ratio || 0}%`, W - 90, y + 58);
+
+      ctx.textAlign = 'left';
+      y += rowH + 12;
+    });
+
+    // 底部
+    ctx.fillStyle = '#64748b';
+    ctx.font = '400 22px -apple-system, "PingFang SC", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`📅 ${dateStr}    ·    共 ${sectors.length} 个板块`, W / 2, y + 40);
+    ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillText('仅供参考 · 不构成投资建议', W / 2, H - 50);
+  } else {
+    // 板块模式
+    const key = __posterSector;
+    const sector = data.latest.sectors[key];
+    if (!sector) return;
+    const color = SECTOR_COLORS[key] || '#06b6d4';
+    const name = SECTOR_NAMES[key] || key;
+    const score = sector.index;
+    const details = sector.details || {};
+
+    ctx.font = '700 40px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#f1f5f9';
+    ctx.fillText(name, 60, 200);
+
+    // 超大分数
+    ctx.save();
+    ctx.font = '900 280px -apple-system, sans-serif';
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.fillText(score.toFixed(0), W / 2, 310);
+
+    const label = score >= 75 ? '🔥 极度亢奋' : score >= 60 ? '🟠 情绪升温' : score >= 40 ? '🟡 温和乐观' : score >= 20 ? '🟢 理性冷静' : '🔵 极度冷清';
+    ctx.font = '600 30px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#e2e8f0';
+    ctx.fillText(label, W / 2, 610);
+    ctx.restore();
+
+    // 统计卡片
+    ctx.textAlign = 'left';
+    const colW = (W - 120) / 3;
+    const cardY = 680;
+    const cardH = 150;
+    const cards = [
+      { label: '小白占比', value: (details.newbie_ratio || 0) + '%' },
+      { label: '宝妈卖出', value: details.mom_sell_index || 0 },
+      { label: '宝妈买入', value: details.mom_buy_index || 0 },
+    ];
+    cards.forEach((c, i) => {
+      const x = 60 + i * colW;
+      ctx.fillStyle = '#ffffff12';
+      roundRectFill(ctx, x + 10, cardY, colW - 20, cardH, 18);
+      ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(c.label, x + 30, cardY + 30);
+      ctx.font = '800 60px -apple-system, sans-serif';
+      ctx.fillStyle = color;
+      ctx.fillText(String(c.value), x + 30, cardY + 110);
+    });
+
+    // 底部
+    ctx.textAlign = 'center';
+    ctx.font = '400 22px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(`📅 ${dateStr}    ·    ${sector.interpretation || ''}`, W / 2, cardY + cardH + 50);
+    ctx.font = '600 22px -apple-system, "PingFang SC", sans-serif';
+    ctx.fillStyle = color;
+    ctx.fillText('仅供参考 · 不构成投资建议', W / 2, H - 50);
+  }
+}
+
+function roundRectFill(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  ctx.fill();
 }
 </script>
 </body>
