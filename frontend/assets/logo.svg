@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="60%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#db2777"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fcd34d"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+  </defs>
+  <!-- 圆角方形底板（温暖渐变） -->
+  <rect x="2" y="2" width="60" height="60" rx="16" ry="16" fill="url(#bg)"/>
+  <!-- 柔和光晕 -->
+  <circle cx="32" cy="32" r="26" fill="none" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.2"/>
+
+  <!-- 妈妈头发（后脑勺 + 长发披肩） -->
+  <path d="M20 22
+           C 20 14, 27 10, 32 10
+           C 37 10, 44 14, 44 22
+           L 45 34
+           C 45 36, 43 38, 41 38
+           L 41 44
+           C 41 47, 39 48, 37 48
+           L 27 48
+           C 25 48, 23 47, 23 44
+           L 23 38
+           C 21 38, 19 36, 19 34
+           Z"
+        fill="url(#hair)"/>
+
+  <!-- 妈妈脸 -->
+  <ellipse cx="32" cy="26" rx="7.5" ry="8.5" fill="url(#skin)"/>
+
+  <!-- 妈妈身体（肩部曲线） -->
+  <path d="M18 48
+           C 22 40, 28 38, 32 38
+           C 36 38, 42 40, 46 48
+           C 46 50, 44 52, 42 52
+           L 22 52
+           C 20 52, 18 50, 18 48 Z"
+        fill="#fff7ed" fill-opacity="0.95"/>
+
+  <!-- 宝宝（依偎在妈妈怀里，小身体） -->
+  <path d="M38 44
+           C 38 38, 42 34, 48 34
+           C 52 34, 56 37, 56 42
+           C 56 48, 52 52, 47 52
+           L 38 52 Z"
+        fill="url(#skin)"/>
+
+  <!-- 宝宝头 -->
+  <circle cx="47" cy="34" r="6" fill="url(#skin)"/>
+  <!-- 宝宝头发 -->
+  <path d="M41 32
+           C 42 28, 46 26, 50 27
+           C 53 28, 54 30, 54 32
+           C 52 31, 49 31, 47 32
+           Z"
+        fill="url(#hair)"/>
+
+  <!-- 小爱心装饰（象征母爱） -->
+  <path d="M32 54
+           C 30 52, 27 53, 27 55
+           C 27 57, 30 59, 32 60
+           C 34 59, 37 57, 37 55
+           C 37 53, 34 52, 32 54 Z"
+        fill="#fecaca" fill-opacity="0.95"/>
+
+  <!-- 妈妈眼睛 -->
+  <circle cx="29.5" cy="26" r="0.9" fill="#1f2937"/>
+  <circle cx="34.5" cy="26" r="0.9" fill="#1f2937"/>
+  <!-- 妈妈微笑 -->
+  <path d="M29.5 29 Q 32 31, 34.5 29" stroke="#1f2937" stroke-width="1" fill="none" stroke-linecap="round"/>
+
+  <!-- 宝宝眼睛 -->
+  <circle cx="45.5" cy="34" r="0.7" fill="#1f2937"/>
+  <circle cx="48.5" cy="34" r="0.7" fill="#1f2937"/>
+  <!-- 宝宝微笑 -->
+  <path d="M45.5 36 Q 47 37.5, 48.5 36" stroke="#1f2937" stroke-width="0.9" fill="none" stroke-linecap="round"/>
+  <!-- 宝宝腮红 -->
+  <circle cx="44" cy="36" r="0.8" fill="#fca5a5" fill-opacity="0.8"/>
+  <circle cx="50" cy="36" r="0.8" fill="#fca5a5" fill-opacity="0.8"/>
+</svg>

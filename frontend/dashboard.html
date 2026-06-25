@@ -219,7 +219,10 @@ body {
 <body>
 
 <div class="header">
-  <h1>👩‍👧 宝妈指数</h1>
+  <h1 style="display:flex; align-items:center; gap:10px; justify-content:center;">
+    <img src="/assets/logo.svg" alt="宝妈指数" style="width:40px; height:40px; vertical-align:middle;" />
+    宝妈指数
+  </h1>
   <div class="subtitle">当小白开始讨论投资，就是该警惕的时候</div>
   <div class="subtitle" id="update-time" style="margin-top:4px"></div>
 </div>
@@ -904,7 +907,8 @@ function drawPoster() {
   ctx.fillStyle = '#94a3b8';
   ctx.font = '700 36px -apple-system, "PingFang SC", sans-serif';
   ctx.textBaseline = 'top';
-  ctx.fillText('👩‍👧 宝妈指数', 60, 60);
+  drawLogoMark(ctx, 60, 52, 56);
+  ctx.fillText('宝妈指数', 135, 64);
 
   ctx.font = '500 24px -apple-system, "PingFang SC", sans-serif';
   ctx.fillStyle = '#64748b';
@@ -1052,6 +1056,139 @@ function roundRectFill(ctx, x, y, w, h, r) {
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
   ctx.fill();
+}
+
+// 绘制妈妈+宝宝 logo 图标（温暖矢量）
+function drawLogoMark(ctx, x, y, size) {
+  const s = size / 64;
+  ctx.save();
+  ctx.translate(x, y);
+  const bg = ctx.createLinearGradient(0, 0, size, size);
+  bg.addColorStop(0, '#f97316');
+  bg.addColorStop(0.6, '#ef4444');
+  bg.addColorStop(1, '#db2777');
+  ctx.fillStyle = bg;
+  const r = 16 * s;
+  roundedPath(ctx, 0, 0, size, size, r);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+  ctx.lineWidth = 1.2 * s;
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, 26 * s, 0, Math.PI * 2);
+  ctx.stroke();
+
+  const hair = ctx.createLinearGradient(0, 10 * s, 0, 48 * s);
+  hair.addColorStop(0, '#78350f');
+  hair.addColorStop(1, '#451a03');
+  ctx.fillStyle = hair;
+  ctx.beginPath();
+  ctx.moveTo(20 * s, 22 * s);
+  ctx.bezierCurveTo(20 * s, 14 * s, 27 * s, 10 * s, 32 * s, 10 * s);
+  ctx.bezierCurveTo(37 * s, 10 * s, 44 * s, 14 * s, 44 * s, 22 * s);
+  ctx.lineTo(45 * s, 34 * s);
+  ctx.bezierCurveTo(45 * s, 36 * s, 43 * s, 38 * s, 41 * s, 38 * s);
+  ctx.lineTo(41 * s, 44 * s);
+  ctx.bezierCurveTo(41 * s, 47 * s, 39 * s, 48 * s, 37 * s, 48 * s);
+  ctx.lineTo(27 * s, 48 * s);
+  ctx.bezierCurveTo(25 * s, 48 * s, 23 * s, 47 * s, 23 * s, 44 * s);
+  ctx.lineTo(23 * s, 38 * s);
+  ctx.bezierCurveTo(21 * s, 38 * s, 19 * s, 36 * s, 19 * s, 34 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  const skin = ctx.createLinearGradient(0, 18 * s, 0, 35 * s);
+  skin.addColorStop(0, '#fde68a');
+  skin.addColorStop(1, '#fcd34d');
+  ctx.fillStyle = skin;
+  ctx.beginPath();
+  ctx.ellipse(32 * s, 26 * s, 7.5 * s, 8.5 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,247,237,0.95)';
+  ctx.beginPath();
+  ctx.moveTo(18 * s, 48 * s);
+  ctx.bezierCurveTo(22 * s, 40 * s, 28 * s, 38 * s, 32 * s, 38 * s);
+  ctx.bezierCurveTo(36 * s, 38 * s, 42 * s, 40 * s, 46 * s, 48 * s);
+  ctx.bezierCurveTo(46 * s, 50 * s, 44 * s, 52 * s, 42 * s, 52 * s);
+  ctx.lineTo(22 * s, 52 * s);
+  ctx.bezierCurveTo(20 * s, 52 * s, 18 * s, 50 * s, 18 * s, 48 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = skin;
+  ctx.beginPath();
+  ctx.moveTo(38 * s, 44 * s);
+  ctx.bezierCurveTo(38 * s, 38 * s, 42 * s, 34 * s, 48 * s, 34 * s);
+  ctx.bezierCurveTo(52 * s, 34 * s, 56 * s, 37 * s, 56 * s, 42 * s);
+  ctx.bezierCurveTo(56 * s, 48 * s, 52 * s, 52 * s, 47 * s, 52 * s);
+  ctx.lineTo(38 * s, 52 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(47 * s, 34 * s, 6 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = hair;
+  ctx.beginPath();
+  ctx.moveTo(41 * s, 32 * s);
+  ctx.bezierCurveTo(42 * s, 28 * s, 46 * s, 26 * s, 50 * s, 27 * s);
+  ctx.bezierCurveTo(53 * s, 28 * s, 54 * s, 30 * s, 54 * s, 32 * s);
+  ctx.bezierCurveTo(52 * s, 31 * s, 49 * s, 31 * s, 47 * s, 32 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(254,202,202,0.95)';
+  ctx.beginPath();
+  ctx.moveTo(32 * s, 54 * s);
+  ctx.bezierCurveTo(30 * s, 52 * s, 27 * s, 53 * s, 27 * s, 55 * s);
+  ctx.bezierCurveTo(27 * s, 57 * s, 30 * s, 59 * s, 32 * s, 60 * s);
+  ctx.bezierCurveTo(34 * s, 59 * s, 37 * s, 57 * s, 37 * s, 55 * s);
+  ctx.bezierCurveTo(37 * s, 53 * s, 34 * s, 52 * s, 32 * s, 54 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = '#1f2937';
+  ctx.beginPath();
+  ctx.arc(29.5 * s, 26 * s, 0.9 * s, 0, Math.PI * 2);
+  ctx.arc(34.5 * s, 26 * s, 0.9 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 1 * s;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(32 * s, 30 * s, 2 * s, 0.1 * Math.PI, 0.9 * Math.PI);
+  ctx.stroke();
+
+  ctx.fillStyle = '#1f2937';
+  ctx.beginPath();
+  ctx.arc(45.5 * s, 34 * s, 0.7 * s, 0, Math.PI * 2);
+  ctx.arc(48.5 * s, 34 * s, 0.7 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = '#1f2937';
+  ctx.lineWidth = 0.9 * s;
+  ctx.beginPath();
+  ctx.arc(47 * s, 36.5 * s, 1.5 * s, 0.1 * Math.PI, 0.9 * Math.PI);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(252,165,165,0.8)';
+  ctx.beginPath();
+  ctx.arc(44 * s, 36 * s, 0.8 * s, 0, Math.PI * 2);
+  ctx.arc(50 * s, 36 * s, 0.8 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function roundedPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
 }
 </script>
 </body>

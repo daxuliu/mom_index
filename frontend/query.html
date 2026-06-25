@@ -541,11 +541,12 @@
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, W, H);
 
-      // 顶部：标题 + Logo
+      // 顶部：Logo + 标题
       ctx.fillStyle = '#94a3b8';
       ctx.font = '600 28px -apple-system, "PingFang SC", sans-serif';
       ctx.textBaseline = 'top';
-      ctx.fillText('宝妈指数 · MOM INDEX', 60, 60);
+      drawLogoMark(ctx, 60, 55, 44);
+      ctx.fillText('宝妈指数 · MOM INDEX', 120, 60);
 
       ctx.font = '400 22px -apple-system, "PingFang SC", sans-serif';
       ctx.fillStyle = '#64748b';
@@ -689,6 +690,154 @@
       ctx.closePath();
       if (fill) { ctx.fillStyle = fill; ctx.fill(); }
       if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 1; ctx.stroke(); }
+    }
+
+    // 绘制妈妈+宝宝 logo 图标（温暖矢量）
+    function drawLogoMark(ctx, x, y, size) {
+      const s = size / 64;
+      ctx.save();
+      ctx.translate(x, y);
+      // 底板（橙→红→粉暖渐变）
+      const bg = ctx.createLinearGradient(0, 0, size, size);
+      bg.addColorStop(0, '#f97316');
+      bg.addColorStop(0.6, '#ef4444');
+      bg.addColorStop(1, '#db2777');
+      ctx.fillStyle = bg;
+      const r = 16 * s;
+      roundedPath(ctx, 0, 0, size, size, r);
+      ctx.fill();
+      // 外圈光晕
+      ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+      ctx.lineWidth = 1.2 * s;
+      ctx.beginPath();
+      ctx.arc(size / 2, size / 2, 26 * s, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 妈妈头发
+      const hair = ctx.createLinearGradient(0, 10 * s, 0, 48 * s);
+      hair.addColorStop(0, '#78350f');
+      hair.addColorStop(1, '#451a03');
+      ctx.fillStyle = hair;
+      ctx.beginPath();
+      ctx.moveTo(20 * s, 22 * s);
+      ctx.bezierCurveTo(20 * s, 14 * s, 27 * s, 10 * s, 32 * s, 10 * s);
+      ctx.bezierCurveTo(37 * s, 10 * s, 44 * s, 14 * s, 44 * s, 22 * s);
+      ctx.lineTo(45 * s, 34 * s);
+      ctx.bezierCurveTo(45 * s, 36 * s, 43 * s, 38 * s, 41 * s, 38 * s);
+      ctx.lineTo(41 * s, 44 * s);
+      ctx.bezierCurveTo(41 * s, 47 * s, 39 * s, 48 * s, 37 * s, 48 * s);
+      ctx.lineTo(27 * s, 48 * s);
+      ctx.bezierCurveTo(25 * s, 48 * s, 23 * s, 47 * s, 23 * s, 44 * s);
+      ctx.lineTo(23 * s, 38 * s);
+      ctx.bezierCurveTo(21 * s, 38 * s, 19 * s, 36 * s, 19 * s, 34 * s);
+      ctx.closePath();
+      ctx.fill();
+
+      // 妈妈脸
+      const skin = ctx.createLinearGradient(0, 18 * s, 0, 35 * s);
+      skin.addColorStop(0, '#fde68a');
+      skin.addColorStop(1, '#fcd34d');
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.ellipse(32 * s, 26 * s, 7.5 * s, 8.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 妈妈身体
+      ctx.fillStyle = 'rgba(255,247,237,0.95)';
+      ctx.beginPath();
+      ctx.moveTo(18 * s, 48 * s);
+      ctx.bezierCurveTo(22 * s, 40 * s, 28 * s, 38 * s, 32 * s, 38 * s);
+      ctx.bezierCurveTo(36 * s, 38 * s, 42 * s, 40 * s, 46 * s, 48 * s);
+      ctx.bezierCurveTo(46 * s, 50 * s, 44 * s, 52 * s, 42 * s, 52 * s);
+      ctx.lineTo(22 * s, 52 * s);
+      ctx.bezierCurveTo(20 * s, 52 * s, 18 * s, 50 * s, 18 * s, 48 * s);
+      ctx.closePath();
+      ctx.fill();
+
+      // 宝宝身体
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.moveTo(38 * s, 44 * s);
+      ctx.bezierCurveTo(38 * s, 38 * s, 42 * s, 34 * s, 48 * s, 34 * s);
+      ctx.bezierCurveTo(52 * s, 34 * s, 56 * s, 37 * s, 56 * s, 42 * s);
+      ctx.bezierCurveTo(56 * s, 48 * s, 52 * s, 52 * s, 47 * s, 52 * s);
+      ctx.lineTo(38 * s, 52 * s);
+      ctx.closePath();
+      ctx.fill();
+
+      // 宝宝头
+      ctx.fillStyle = skin;
+      ctx.beginPath();
+      ctx.arc(47 * s, 34 * s, 6 * s, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 宝宝头发
+      ctx.fillStyle = hair;
+      ctx.beginPath();
+      ctx.moveTo(41 * s, 32 * s);
+      ctx.bezierCurveTo(42 * s, 28 * s, 46 * s, 26 * s, 50 * s, 27 * s);
+      ctx.bezierCurveTo(53 * s, 28 * s, 54 * s, 30 * s, 54 * s, 32 * s);
+      ctx.bezierCurveTo(52 * s, 31 * s, 49 * s, 31 * s, 47 * s, 32 * s);
+      ctx.closePath();
+      ctx.fill();
+
+      // 小爱心
+      ctx.fillStyle = 'rgba(254,202,202,0.95)';
+      ctx.beginPath();
+      ctx.moveTo(32 * s, 54 * s);
+      ctx.bezierCurveTo(30 * s, 52 * s, 27 * s, 53 * s, 27 * s, 55 * s);
+      ctx.bezierCurveTo(27 * s, 57 * s, 30 * s, 59 * s, 32 * s, 60 * s);
+      ctx.bezierCurveTo(34 * s, 59 * s, 37 * s, 57 * s, 37 * s, 55 * s);
+      ctx.bezierCurveTo(37 * s, 53 * s, 34 * s, 52 * s, 32 * s, 54 * s);
+      ctx.closePath();
+      ctx.fill();
+
+      // 妈妈五官
+      ctx.fillStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.arc(29.5 * s, 26 * s, 0.9 * s, 0, Math.PI * 2);
+      ctx.arc(34.5 * s, 26 * s, 0.9 * s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1f2937';
+      ctx.lineWidth = 1 * s;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.arc(32 * s, 30 * s, 2 * s, 0.1 * Math.PI, 0.9 * Math.PI);
+      ctx.stroke();
+
+      // 宝宝五官
+      ctx.fillStyle = '#1f2937';
+      ctx.beginPath();
+      ctx.arc(45.5 * s, 34 * s, 0.7 * s, 0, Math.PI * 2);
+      ctx.arc(48.5 * s, 34 * s, 0.7 * s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1f2937';
+      ctx.lineWidth = 0.9 * s;
+      ctx.beginPath();
+      ctx.arc(47 * s, 36.5 * s, 1.5 * s, 0.1 * Math.PI, 0.9 * Math.PI);
+      ctx.stroke();
+
+      // 宝宝腮红
+      ctx.fillStyle = 'rgba(252,165,165,0.8)';
+      ctx.beginPath();
+      ctx.arc(44 * s, 36 * s, 0.8 * s, 0, Math.PI * 2);
+      ctx.arc(50 * s, 36 * s, 0.8 * s, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+    function roundedPath(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
     }
     function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
       const lines = wrapTextLines(ctx, text, x, maxWidth, lineHeight);
