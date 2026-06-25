@@ -231,6 +231,42 @@ body {
   margin-top: 4px;
 }
 
+/* 实时报价条 */
+.quote-bar {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, rgba(15,23,42,0.6), rgba(15,23,42,0.3));
+  border: 1px solid #334155;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  min-height: 38px;
+}
+.quote-bar.loading { color: #64748b; font-size: 11px; justify-content: center; }
+.quote-code { color: #94a3b8; font-weight: 600; font-size: 11px; }
+.quote-price { color: #e2e8f0; font-weight: 800; font-size: 16px; }
+.quote-change-up   { color: #f87171; font-weight: 700; }
+.quote-change-down { color: #4ade80; font-weight: 700; }
+.quote-change-flat { color: #94a3b8; font-weight: 700; }
+.quote-meta { color: #64748b; font-size: 10px; margin-top: 2px; }
+.quote-flash-up   { animation: flashUp 0.6s ease-out; }
+.quote-flash-down { animation: flashDown 0.6s ease-out; }
+@keyframes flashUp   { 0% { background: rgba(239,68,68,0.35); } 100% { background: transparent; } }
+@keyframes flashDown { 0% { background: rgba(34,197,94,0.35); } 100% { background: transparent; } }
+.quote-pulse {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  margin-right: 4px;
+  animation: pulse 2s ease-in-out infinite;
+}
+.quote-pulse.closed { background: #475569; animation: none; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
 .poster-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
 .poster-modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
 .poster-modal { max-width: 420px; width: 100%; display: flex; flex-direction: column; gap: 16px; align-items: center; }
@@ -501,6 +537,10 @@ function renderCards(data) {
             <div style="width:${(d.buy_count||0)/(Math.max(d.buy_count||0, d.sell_count||0, 1))*100}%; height:100%; background:linear-gradient(90deg,#22c55e,#4ade80);"></div>
           </div>
           <span>买入 ${d.buy_count||0}</span>
+        </div>
+        <!-- 实时报价 -->
+        <div class="quote-bar loading" id="quote-${key}" data-sector="${key}">
+          <span class="quote-pulse"></span>实时报价加载中…
         </div>
         <div class="detail-row">
           <span>小白帖</span><span>${d.newbie_posts || 0}/${d.valid_posts || d.total_posts || 0} (${d.newbie_ratio || 0}%)</span>
@@ -910,6 +950,152 @@ function initSectorFilter(data) {
   });
 }
 
+// ============ 实时报价（腾讯免费接口） ============
+// sector → 腾讯代码映射
+// 字段含义参考: https://qt.gtimg.cn/?q=sh513100
+// [1]=名称 [3]=现价 [4]=昨收 [6]=成交量 [20]=涨跌额 [21]=涨跌幅% [22]=最高 [23]=最低 [30]=时间
+const QUOTE_SYMBOL = {
+  nasdaq:        'sh513100',   // 纳斯达克ETF
+  gold:          'sh518880',   // 黄金ETF
+  cpo:           'sh515880',   // 通信ETF(CPO)
+  semiconductor: 'sh512480',   // 半导体ETF
+  cnkr_semi:     'sh513310',   // 中韩半导体ETF
+  xiaomi:        'hk01810',    // 小米集团-W
+  tencent:       'hk00700',    // 腾讯控股
+  meituan:       'hk03690',    // 美团-W
+  hangseng_tech: 'sh513130',   // 恒生科技ETF
+  dividend:      'sh000922',   // 中证红利指数
+  micron:        'usMU',       // 美光科技
+};
+// 显示代码（去前缀）
+const QUOTE_DISPLAY = {
+  nasdaq:'513100', gold:'518880', cpo:'515880', semiconductor:'512480',
+  cnkr_semi:'513310', xiaomi:'01810', tencent:'00700', meituan:'03690',
+  hangseng_tech:'513130', dividend:'000922', micron:'MU',
+};
+
+function isMarketOpen(symbol) {
+  // 基于本地时间判断（中国时间，浏览器时区可能不准确，按 UTC+8 估算）
+  const now = new Date();
+  // 转北京时间（UTC+8）
+  const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  const beijing = new Date(utc + 3600000 * 8);
+  const day = beijing.getDay(); // 0=Sun,6=Sat
+  if (day === 0 || day === 6) return false;
+  const minutes = beijing.getHours() * 60 + beijing.getMinutes();
+  if (symbol.startsWith('sh') || symbol.startsWith('sz')) {
+    // A股 9:30-11:30, 13:00-15:00
+    return (minutes >= 570 && minutes <= 690) || (minutes >= 780 && minutes <= 900);
+  }
+  if (symbol.startsWith('hk')) {
+    // 港股 9:30-12:00, 13:00-16:00
+    return (minutes >= 570 && minutes <= 720) || (minutes >= 780 && minutes <= 960);
+  }
+  if (symbol.startsWith('us')) {
+    // 美股 夏令时 21:30-04:00，冬令时 22:30-05:00（按夏令时估算）
+    return minutes >= 1290 || minutes <= 240;
+  }
+  return false;
+}
+
+let __lastPrices = {}; // 用于闪烁动画对比
+
+async function fetchAllQuotes() {
+  const symbols = Object.values(QUOTE_SYMBOL);
+  if (!symbols.length) return;
+  const url = `https://qt.gtimg.cn/q=${symbols.join(',')}`;
+  try {
+    const resp = await fetch(url);
+    // 响应是 GBK 编码，手动用 TextDecoder 解码保证中文正常
+    const buf = await resp.arrayBuffer();
+    const text = new TextDecoder('gbk').decode(buf);
+    parseQuotes(text);
+  } catch (err) {
+    console.warn('实时报价拉取失败:', err);
+    // 失败时显示降级文案
+    Object.keys(QUOTE_SYMBOL).forEach(sector => {
+      const el = document.getElementById(`quote-${sector}`);
+      if (el && el.classList.contains('loading')) {
+        el.classList.remove('loading');
+        el.innerHTML = '<span class="quote-pulse closed"></span><span class="quote-meta">报价服务暂不可用</span>';
+      }
+    });
+  }
+}
+
+function parseQuotes(raw) {
+  // 格式: v_sh513100="...";v_hk00700="...";
+  const lines = raw.split(';');
+  const dataBySymbol = {};
+  for (const line of lines) {
+    const m = line.match(/^v_(\w+)="(.*)"$/);
+    if (!m) continue;
+    dataBySymbol[m[1]] = m[2];
+  }
+  Object.entries(QUOTE_SYMBOL).forEach(([sector, sym]) => {
+    const data = dataBySymbol[sym];
+    const el = document.getElementById(`quote-${sector}`);
+    if (!el) return;
+    if (!data || !data || data === 'pv_none_match=1' || data.length < 10) {
+      el.classList.remove('loading');
+      el.innerHTML = `<span class="quote-pulse closed"></span><span class="quote-meta">${QUOTE_DISPLAY[sector]} 暂无数据</span>`;
+      return;
+    }
+    const parts = data.split('~');
+    // 字段: [1]=名称 [3]=现价 [4]=昨收 [20]=涨跌额 [21]=涨跌幅% [22]=最高 [23]=最低 [30]=时间
+    const name = parts[1] || '';
+    const price = parseFloat(parts[3]);
+    const prevClose = parseFloat(parts[4]);
+    const change = parseFloat(parts[20]);
+    const changePct = parseFloat(parts[21]);
+    const high = parseFloat(parts[22]);
+    const low = parseFloat(parts[23]);
+    const time = parts[30] || '';
+    if (isNaN(price) || isNaN(prevClose) || price === 0) {
+      el.classList.remove('loading');
+      el.innerHTML = `<span class="quote-pulse closed"></span><span class="quote-meta">${QUOTE_DISPLAY[sector]} 解析失败</span>`;
+      return;
+    }
+    const dir = change > 0 ? 'up' : change < 0 ? 'down' : 'flat';
+    const arrow = change > 0 ? '▲' : change < 0 ? '▼' : '─';
+    const sign = change > 0 ? '+' : '';
+    // 闪烁动画：价格变化时高亮
+    const prev = __lastPrices[sector];
+    let flashClass = '';
+    if (typeof prev === 'number' && prev !== price) {
+      flashClass = price > prev ? 'quote-flash-up' : 'quote-flash-down';
+    }
+    __lastPrices[sector] = price;
+    // 交易状态指示
+    const open = isMarketOpen(sym);
+    el.classList.remove('loading');
+    el.innerHTML = `
+      <div>
+        <div><span class="quote-code">${QUOTE_DISPLAY[sector]}</span> <span style="color:#64748b;font-size:10px;margin-left:4px">${name}</span></div>
+        <div class="quote-meta">高 ${high.toFixed(3)} · 低 ${low.toFixed(3)}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="quote-price">${price.toFixed(3)}</div>
+        <div class="quote-change-${dir}">${arrow} ${sign}${change.toFixed(3)} (${sign}${changePct.toFixed(2)}%)</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
+        <span class="quote-pulse${open ? '' : ' closed'}" title="${open ? '交易中' : '已休市'}"></span>
+        <span class="quote-meta" style="margin-top:0">${time ? time.slice(11, 16) : ''}</span>
+      </div>
+    `;
+    if (flashClass) {
+      el.classList.add(flashClass);
+      setTimeout(() => el.classList.remove(flashClass), 600);
+    }
+  });
+}
+
+function startQuotePolling() {
+  fetchAllQuotes();
+  // 30 秒刷新一次（A 股日内每 15s 推送一次已经够用，避免对腾讯接口造成压力）
+  setInterval(fetchAllQuotes, 30000);
+}
+
 // 加载数据
 fetch('data/dashboard_data.json')
   .then(r => r.json())
@@ -920,6 +1106,8 @@ fetch('data/dashboard_data.json')
     initSectorFilter(data);
     renderTopPosts(data, '__all__');
     renderAllMiniCharts(data);
+    // 启动实时报价轮询
+    startQuotePolling();
     // 进入键搜索
     document.getElementById('stock-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchStock();
