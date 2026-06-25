@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于宝妈指数 - 散户小白情绪温度计 | Mom Index</title>
+  <meta name="description" content="宝妈指数（Mom Index）是一个基于'擦鞋童理论'的散户情绪反向指标，通过追踪股吧、小红书等中文社交平台的讨论热度，量化 11 个热门板块的散户情绪。当菜市场大妈都在讨论股票时，就是该离场的时候。">
+  <meta name="keywords" content="宝妈指数,Mom Index,关于,原理,擦鞋童理论,散户情绪,反向指标,计算公式,数据源,使用说明">
+  <meta name="author" content="Mom Index">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mom-index-eight.vercel.app/about.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="关于宝妈指数 - 散户小白情绪温度计">
+  <meta property="og:description" content="基于'擦鞋童理论'的散户情绪反向指标，覆盖 11 个热门板块">
+  <meta property="og:url" content="https://mom-index-eight.vercel.app/about.html">
+  <meta property="og:site_name" content="宝妈指数">
+
+  <!-- FAQ 结构化数据 - 提升搜索结果展示 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "什么是宝妈指数？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "宝妈指数（Mom Index）是基于股吧、小红书等中文社交平台数据，计算出来的散户情绪反向指标。指数越高（接近 100），说明散户越狂热，市场越危险；指数越低（接近 0），说明散户越沉默，可能是底部机会。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "为什么叫'宝妈指数'？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "灵感来自'擦鞋童理论'（Shoe Shine Theory）：当连擦鞋童都在讨论股票时，就是市场顶部。'宝妈'代指没有金融背景的普通家庭投资者——当他们都在讨论股票、追涨杀跌时，往往是反向信号。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "覆盖哪些板块？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "目前覆盖 11 个热门板块：纳斯达克、黄金、CPO通信、半导体、中韩半导体、小米集团、腾讯控股、美团、恒生科技、中证红利、美光科技。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "数据多久更新一次？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "情绪指数每天更新（每日 21:00 后）。实时报价每 30 秒自动刷新（交易时段）。跨境 ETF 溢价每 30 秒刷新。"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "宝妈指数能预测市场吗？",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "它是一个反向情绪指标，理论上'指数越高=市场越危险'。但它不是预测工具，而是风险预警工具。建议作为决策的辅助参考之一。"
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "首页",
+        "item": "https://mom-index-eight.vercel.app/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "关于",
+        "item": "https://mom-index-eight.vercel.app/about.html"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+    .back {
+      display: inline-block;
+      color: #06b6d4;
+      text-decoration: none;
+      margin-bottom: 24px;
+      font-size: 14px;
+    }
+    .back:hover { text-decoration: underline; }
+    h1 {
+      font-size: 32px;
+      background: linear-gradient(90deg, #06b6d4, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .subtitle {
+      color: #94a3b8;
+      font-size: 16px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      color: #f1f5f9;
+      font-size: 22px;
+      margin-top: 36px;
+      margin-bottom: 12px;
+      padding-left: 12px;
+      border-left: 4px solid #06b6d4;
+    }
+    p { color: #cbd5e1; margin-bottom: 14px; }
+    .quote {
+      background: rgba(167, 139, 250, 0.1);
+      border-left: 4px solid #a78bfa;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      font-style: italic;
+      color: #e2e8f0;
+    }
+    .quote-by { color: #94a3b8; font-size: 14px; margin-top: 8px; font-style: normal; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+    th { background: rgba(51, 65, 85, 0.6); color: #f1f5f9; font-weight: 600; }
+    td { color: #cbd5e1; }
+    code {
+      background: #1e293b;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: "JetBrains Mono", monospace;
+      color: #fbbf24;
+      font-size: 14px;
+    }
+    .faq-item {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 12px 0;
+    }
+    .faq-q { color: #fbbf24; font-weight: 600; margin-bottom: 8px; }
+    .faq-a { color: #cbd5e1; }
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .nav-card {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: #e2e8f0;
+      transition: all 0.2s;
+      display: block;
+    }
+    .nav-card:hover { transform: translateY(-2px); border-color: #06b6d4; }
+    .nav-card-icon { font-size: 32px; margin-bottom: 8px; }
+    .nav-card-title { color: #f1f5f9; font-weight: 600; margin-bottom: 4px; }
+    .nav-card-desc { color: #94a3b8; font-size: 13px; }
+    .disclaimer {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 24px 0;
+      color: #fca5a5;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="back" href="/">← 返回宝妈指数</a>
+
+    <h1>关于宝妈指数</h1>
+    <p class="subtitle">Mom Index · 散户小白情绪温度计</p>
+
+    <div class="quote">
+      当菜市场大妈和宝妈都在讨论股票，就是该离场的时候。
+      <div class="quote-by">— Joseph Kennedy, 1929</div>
+    </div>
+
+    <h2>📌 项目简介</h2>
+    <p>
+      <strong>宝妈指数（Mom Index）</strong>是一个基于中文社交平台数据的
+      <strong>散户情绪反向指标</strong>。它通过追踪股吧、小红书等平台上的投资讨论，
+      量化 11 个热门板块的"小白活跃度"和"情绪极端度"。
+    </p>
+    <p>
+      灵感来自经典的"擦鞋童理论"（Shoe Shine Theory）——当连擦鞋童都在讨论股票时，
+      往往就是市场顶部。宝妈指数把这个直觉量化为 0-100 的数值，
+      <strong>指数越高，市场越危险</strong>。
+    </p>
+
+    <h2>🎯 覆盖板块（11 个）</h2>
+    <table>
+      <tr><th>板块</th><th>类型</th><th>代表代码</th></tr>
+      <tr><td>🔌 纳斯达克</td><td>A 股 ETF</td><td><code>513100</code></td></tr>
+      <tr><td>🥇 黄金</td><td>A 股 ETF</td><td><code>518880</code></td></tr>
+      <tr><td>💡 CPO 通信</td><td>A 股 ETF</td><td><code>515880</code></td></tr>
+      <tr><td>🔬 半导体</td><td>A 股 ETF</td><td><code>512480</code></td></tr>
+      <tr><td>🌏 中韩半导体</td><td>A 股 ETF</td><td><code>513310</code></td></tr>
+      <tr><td>📱 小米集团</td><td>港股</td><td><code>01810</code></td></tr>
+      <tr><td>🎮 腾讯控股</td><td>港股</td><td><code>00700</code></td></tr>
+      <tr><td>🍔 美团</td><td>港股</td><td><code>03690</code></td></tr>
+      <tr><td>🖥️ 恒生科技</td><td>A 股 ETF</td><td><code>513130</code></td></tr>
+      <tr><td>💰 中证红利</td><td>A 股指数</td><td><code>000922</code></td></tr>
+      <tr><td>🧠 美光科技</td><td>美股</td><td><code>MU</code></td></tr>
+    </table>
+
+    <h2>🧮 指数计算</h2>
+    <p>
+      宝妈指数由四个维度加权计算：
+    </p>
+    <pre><code>宝妈指数 = 小白占比 × 0.40
+         + 小白强度 × 0.25
+         + 情绪极端度 × 0.20
+         + 信号纯度 × 0.15</code></pre>
+    <p>
+      其中"小白"通过 40+ 信号词库判定，包括身份自述（"我是小白"）、
+      知识求助（"怎么买"）、决策依赖（"该不该买"）等。
+    </p>
+
+    <h2>📊 指数区间</h2>
+    <table>
+      <tr><th>区间</th><th>信号</th><th>建议</th></tr>
+      <tr><td>0-20</td><td>🔵 极度冷清</td><td>小白沉默，可能是底部</td></tr>
+      <tr><td>20-40</td><td>🟢 正常区间</td><td>维持现有策略</td></tr>
+      <tr><td>40-60</td><td>🟡 开始升温</td><td>关注，准备减仓</td></tr>
+      <tr><td>60-75</td><td>🟠 高度警惕</td><td>大幅减仓</td></tr>
+      <tr><td>75-100</td><td>🔴 极度狂热</td><td>擦鞋童时刻，清仓</td></tr>
+    </table>
+
+    <h2>🌍 跨境 ETF 溢价</h2>
+    <p>
+      除了情绪指数，本项目还监控 <strong>20 只跨境 ETF</strong> 的实时溢价率：
+    </p>
+    <ul style="padding-left:24px; margin-bottom:14px;">
+      <li>纳斯达克 100（12 只）</li>
+      <li>标普 500（4 只）</li>
+      <li>日经 225（4 只）</li>
+    </ul>
+    <p>
+      溢价率 = (场内实时价 - T-1 净值) / T-1 净值。<code>&gt;5%</code> 警惕追涨，
+      <code>&lt;0%</code> 折价机会。
+    </p>
+
+    <h2>📚 数据源</h2>
+    <table>
+      <tr><th>数据源</th><th>用途</th><th>状态</th></tr>
+      <tr><td>东方财富股吧</td><td>原始帖子</td><td>✅ 稳定（307 条/日）</td></tr>
+      <tr><td>小红书（rnote.dev）</td><td>原始帖子</td><td>⚠️ 需充值</td></tr>
+      <tr><td>腾讯实时报价</td><td>实时行情</td><td>✅ 免费</td></tr>
+      <tr><td>东方财富 T-1 净值</td><td>ETF 溢价</td><td>✅ 免费</td></tr>
+    </table>
+
+    <h2>❓ 常见问题</h2>
+    <div class="faq-item">
+      <div class="faq-q">Q: 宝妈指数能预测市场涨跌吗？</div>
+      <div class="faq-a">
+        A: 它是一个反向情绪指标，理论上"指数越高=市场越危险"。
+        但它不是预测工具，而是<strong>风险预警工具</strong>。
+        建议作为决策的辅助参考之一。
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: 数据多久更新一次？</div>
+      <div class="faq-a">
+        A: 情绪指数每天 21:00 后更新。实时报价每 30 秒自动刷新（交易时段）。
+        跨境 ETF 溢价每 30 秒刷新。
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: 为什么只有股吧数据，小红书呢？</div>
+      <div class="faq-a">
+        A: 小红书的稳定数据源需要付费 API 或登录态，目前项目优先保证股吧数据（无需 cookie、无风控）。
+        小红书数据接入正在调研中。
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Q: 关键词规则准确吗？</div>
+      <div class="faq-a">
+        A: 关键词规则有局限性，会漏掉隐含信号、误判部分 spam。
+        项目计划接入 LLM（如 DeepSeek-V3）做语义分类，但目前尚未实装。
+      </div>
+    </div>
+
+    <h2>🚀 立即体验</h2>
+    <div class="nav-cards">
+      <a class="nav-card" href="/dashboard.html">
+        <div class="nav-card-icon">📊</div>
+        <div class="nav-card-title">散户情绪看板</div>
+        <div class="nav-card-desc">11 板块实时监控 + 实时报价 + 走势</div>
+      </a>
+      <a class="nav-card" href="/etf_premium.html">
+        <div class="nav-card-icon">🔴</div>
+        <div class="nav-card-title">跨境 ETF 溢价</div>
+        <div class="nav-card-desc">20 只 ETF 实时溢价排行</div>
+      </a>
+      <a class="nav-card" href="/query.html">
+        <div class="nav-card-icon">🔍</div>
+        <div class="nav-card-title">动态股票查询</div>
+        <div class="nav-card-desc">输入代码，实时算情绪指数</div>
+      </a>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ <strong>免责声明</strong>：本项目所有数据均来自公开网络，
+      仅供学习研究使用，<strong>不构成投资建议</strong>。
+      投资有风险，入市需谨慎。
+    </div>
+  </div>
+</body>
+</html>

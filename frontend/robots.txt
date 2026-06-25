@@ -1,0 +1,22 @@
+# 宝妈指数 (Mom Index) - robots.txt
+# https://mom-index-eight.vercel.app
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# 搜索引擎爬虫专属
+User-agent: Googlebot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Sogou Spider
+Allow: /
+
+# Sitemap 位置
+Sitemap: https://mom-index-eight.vercel.app/sitemap.xml
