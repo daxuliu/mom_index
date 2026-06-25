@@ -92,7 +92,9 @@ class AnalysisResult:
     title: str
     platform: str
     sector: str
-    
+    url: str = ""           # 原帖链接（股吧/小红书/抖音）
+    content: str = ""       # 帖子正文摘要
+
     # 分数
     newbie_score: float = 0.0       # 小白总分 (0-100)
     newbie_confidence: str = "low"   # 置信度: high/medium/low
@@ -146,6 +148,8 @@ def analyze_post(post: Dict, sector: str) -> AnalysisResult:
         title=title[:80],
         platform=post.get("platform", "unknown"),
         sector=sector,
+        url=post.get("url", ""),
+        content=post.get("content", "")[:300],
     )
     
     # 1. 逐信号匹配

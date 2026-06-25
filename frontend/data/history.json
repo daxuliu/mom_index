@@ -3147,7 +3147,7 @@
     },
     {
       "date": "2026-06-25",
-      "timestamp": "2026-06-25T12:58:02.318528",
+      "timestamp": "2026-06-25T14:13:24.856873",
       "sectors": {
         "nasdaq": {
           "index": 44.2,
@@ -3171,12 +3171,19 @@
           },
           "top_newbie_posts": [
             {
+              "post_id": "xhs_sim_nasdaq_0",
               "title": "美股还能不能买啊，感觉涨好多了",
+              "full_title": "美股还能不能买啊，感觉涨好多了",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "纳指今年涨了好多，小白不太懂美股，现在还能买吗？还是等回调？求大神指点",
               "score": 70.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「美股还能不能买啊，感觉涨好多了...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.4,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
@@ -3184,50 +3191,80 @@
               ]
             },
             {
+              "post_id": "xhs_sim_nasdaq_7",
               "title": "现在买纳指会不会高位接盘啊",
+              "full_title": "现在买纳指会不会高位接盘啊",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "纳指都涨到两万多点了，身边好多人都在买，但我总觉得太高了。有没有大佬分析一下风险？",
               "score": 51.6,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「现在买纳指会不会高位接盘啊...」 命中2个小信号: 知识求助(6分), 跟风行为(6分)。 命中1个专业信号: 冷静表达(-2分)。 综合得分51.6分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)",
-                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 都在买)"
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 都在买)",
+                "「冷静表达」理性分析，客观陈述，无情绪化表达 (命中: 分析)"
               ]
             },
             {
+              "post_id": "xhs_sim_nasdaq_8",
               "title": "把A股清仓全部换纳指了",
+              "full_title": "把A股清仓全部换纳指了",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "A股太折磨人了，朋友说美股长期肯定涨，今天直接全部清仓A股买了纳指ETF，小白这样操作对吗？",
               "score": 50.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「把A股清仓全部换纳指了...」 命中2个小信号: 身份自述(8分), 跟风行为(6分)。 命中1个专业信号: 专业术语(-5分)。 综合得分50.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
-                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 朋友说)"
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 朋友说)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
               ]
             },
             {
+              "post_id": "xhs_sim_nasdaq_3",
               "title": "小白想问，为什么纳指一直涨啊",
+              "full_title": "小白想问，为什么纳指一直涨啊",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "不太懂宏观经济，但感觉美股一直在涨，是不是有什么特殊原因？现在买会不会接盘？",
               "score": 42.0,
               "level": "偏小白",
+              "confidence": "low",
               "reasoning": "帖子「小白想问，为什么纳指一直涨啊...」 命中1个小信号: 身份自述(8分)。 综合得分42.0分， 判定为「偏小白」 (置信度: low)。",
               "sentiment": 0.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)"
               ]
             },
             {
+              "post_id": "xhs_sim_nasdaq_2",
               "title": "纳指还能上车吗，纠结了好几天了",
+              "full_title": "纳指还能上车吗，纠结了好几天了",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "一直想买但每天都觉得太高了不敢下手，结果越等越涨，感觉自己错过了好多。今天要不要果断点？",
               "score": 38.0,
               "level": "偏小白",
+              "confidence": "low",
               "reasoning": "帖子「纳指还能上车吗，纠结了好几天了...」 命中1个小信号: 决策依赖(7分)。 综合得分38.0分， 判定为「偏小白」 (置信度: low)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.8,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要, 还能上车吗)"
@@ -3257,38 +3294,61 @@
           },
           "top_newbie_posts": [
             {
+              "post_id": "xhs_sim_gold_0",
               "title": "黄金亏了20%了要不要割肉啊😭",
+              "full_title": "黄金亏了20%了要不要割肉啊😭",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "小白一个，当初听博主说黄金保值才买的，结果一路跌到现在亏了两成，心态真的崩了。各位大佬帮看看还能留吗？",
               "score": 100,
               "level": "纯小白",
+              "confidence": "high",
               "reasoning": "帖子「黄金亏了20%了要不要割肉啊😭...」 命中5个小信号: 身份自述(8分), 知识求助(6分), 决策依赖(7分), 情绪恐慌(5分), 跟风行为(6分)。 综合得分100分， 判定为「纯小白」 (置信度: high)。",
               "sentiment": -1.0,
               "intent": "sell",
+              "intent_strength": 1.0,
               "intent_label": "🔴 卖出",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
-                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)"
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
               ]
             },
             {
+              "post_id": "xhs_sim_gold_10",
               "title": "新手想抄底黄金可以吗",
+              "full_title": "新手想抄底黄金可以吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看到黄金跌了这么多，感觉机会来了，但第一次买不太会操作，有没有大佬教一下在哪买手续费低？",
               "score": 100,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「新手想抄底黄金可以吗...」 命中3个小信号: 身份自述(8分), 知识求助(6分), 决策依赖(7分)。 以问句结尾，在寻求答案 综合得分100分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 1.0,
               "intent": "buy",
+              "intent_strength": 0.2,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手, 第一次)",
-                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)"
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 可以吗)"
               ]
             },
             {
+              "post_id": "xhs_sim_gold_2",
               "title": "黄金到底还能不能买啊",
+              "full_title": "黄金到底还能不能买啊",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "新手求问，现在黄金跌了好多，是不是可以抄底了？还是说还会继续跌？好纠结啊",
               "score": 82.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「黄金到底还能不能买啊...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 标题极短+情绪化，典型小白特征 综合得分82.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 1.0,
               "intent": "buy",
+              "intent_strength": 0.4,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手)",
@@ -3296,12 +3356,19 @@
               ]
             },
             {
+              "post_id": "xhs_sim_gold_9",
               "title": "黄金这是怎么了天天跌",
+              "full_title": "黄金这是怎么了天天跌",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "小白不懂就问，黄金不是最稳的吗？为什么最近天天跌，是不是要打仗了？好害怕",
               "score": 78.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「黄金这是怎么了天天跌...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 标题极短+情绪化，典型小白特征 综合得分78.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
@@ -3309,12 +3376,19 @@
               ]
             },
             {
+              "post_id": "xhs_sim_gold_4",
               "title": "黄金怎么买啊，纯小白求教",
+              "full_title": "黄金怎么买啊，纯小白求教",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "从来没买过投资产品，听同事说黄金不错，但完全不知道在哪买、买哪个，有大佬愿意教一下吗",
               "score": 66.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「黄金怎么买啊，纯小白求教...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 综合得分66.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
@@ -3345,38 +3419,61 @@
           },
           "top_newbie_posts": [
             {
+              "post_id": "xhs_sim_cpo_0",
               "title": "CPO还能买吗？小白求教",
+              "full_title": "CPO还能买吗？小白求教",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "最近总刷到光模块CPO的帖子，所有人都在说会涨，但我不懂这个到底是什么。大佬们觉得现在还能上车吗？",
               "score": 94.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「CPO还能买吗？小白求教...」 命中3个小信号: 身份自述(8分), 知识求助(6分), 决策依赖(7分)。 综合得分94.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.6,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
-                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂, 大佬)"
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂, 大佬)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 还能上车吗)"
               ]
             },
             {
+              "post_id": "xhs_sim_cpo_6",
               "title": "通信ETF是一键买入CPO吗",
+              "full_title": "通信ETF是一键买入CPO吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "小白想买CPO方向，有人跟我说直接买通信ETF就行，是这样吗？还能不能再加？",
               "score": 62.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「通信ETF是一键买入CPO吗...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 以问句结尾，在寻求答案 综合得分62.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.4,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
-                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)"
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
               ]
             },
             {
+              "post_id": "xhs_sim_cpo_2",
               "title": "问了几个博主都说CPO要起飞",
+              "full_title": "问了几个博主都说CPO要起飞",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "关注的好几个投资博主都在推CPO，说是AI算力核心，要不要跟一把？还是再等等回调？",
               "score": 54.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「问了几个博主都说CPO要起飞...」 命中2个小信号: 决策依赖(7分), 过度乐观(4分)。 综合得分54.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 1.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
@@ -3384,12 +3481,19 @@
               ]
             },
             {
+              "post_id": "xhs_sim_cpo_1",
               "title": "满仓干就完了！冲冲冲！",
+              "full_title": "满仓干就完了！冲冲冲！",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "科技牛来了兄弟们，CPO方向稳稳的，今天全部满仓杀进去，不冲不是中国人！",
               "score": 46.0,
               "level": "偏小白",
+              "confidence": "medium",
               "reasoning": "帖子「满仓干就完了！冲冲冲！...」 命中2个小信号: 情绪恐慌(5分), 过度乐观(4分)。 综合得分46.0分， 判定为「偏小白」 (置信度: medium)。",
               "sentiment": 0.33,
               "intent": "buy",
+              "intent_strength": 0.4,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 完了)",
@@ -3397,16 +3501,24 @@
               ]
             },
             {
+              "post_id": "xhs_sim_cpo_11",
               "title": "跟朋友买的CPO今天赚了两千块",
+              "full_title": "跟朋友买的CPO今天赚了两千块",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "朋友推荐的通信ETF真的起飞了，后悔买少了。要不要再加点仓位？感觉AI行情才刚刚开始",
               "score": 45.2,
               "level": "偏小白",
+              "confidence": "high",
               "reasoning": "帖子「跟朋友买的CPO今天赚了两千块...」 命中3个小信号: 决策依赖(7分), 情绪恐慌(5分), 过度乐观(4分)。 命中2个专业信号: 专业术语(-5分), 策略思维(-4分)。 综合得分45.2分， 判定为「偏小白」 (置信度: high)。",
               "sentiment": 1.0,
               "intent": "buy",
+              "intent_strength": 0.2,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
-                "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 后悔)"
+                "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 后悔)",
+                "「过度乐观」非理性乐观（梭哈/稳赚/必涨/躺赚） (命中: 起飞)"
               ]
             }
           ]
@@ -3433,25 +3545,40 @@
           },
           "top_newbie_posts": [
             {
+              "post_id": "xhs_sim_semiconductor_0",
               "title": "芯片半导体还能上车吗",
+              "full_title": "芯片半导体还能上车吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "最近芯片涨了好多啊，看周围人都在买半导体，我也心动了。求大神分析一下现在还能不能入？",
               "score": 63.6,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「芯片半导体还能上车吗...」 命中2个小信号: 决策依赖(7分), 跟风行为(6分)。 命中1个专业信号: 冷静表达(-2分)。 以问句结尾，在寻求答案 综合得分63.6分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.6,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能, 还能上车吗)",
-                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 都在买)"
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 都在买)",
+                "「冷静表达」理性分析，客观陈述，无情绪化表达 (命中: 分析)"
               ]
             },
             {
+              "post_id": "xhs_sim_semiconductor_3",
               "title": "现在不买芯片老了会后悔",
+              "full_title": "现在不买芯片老了会后悔",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "AI时代芯片就是石油，现在不买等涨到天上再买就晚了。我已经满仓半导体了，家人们冲不冲？",
               "score": 58.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「现在不买芯片老了会后悔...」 命中2个小信号: 情绪恐慌(5分), 过度乐观(4分)。 标题极短+情绪化，典型小白特征 综合得分58.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 1.0,
               "intent": "buy",
+              "intent_strength": 0.4,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 后悔)",
@@ -3459,40 +3586,940 @@
               ]
             },
             {
+              "post_id": "xhs_sim_semiconductor_4",
               "title": "芯片这波能涨到什么时候",
+              "full_title": "芯片这波能涨到什么时候",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "刚入市两周就赚了五个点，芯片太猛了。博主们都说还能涨很久，是不是该再多买一点？",
               "score": 54.0,
               "level": "纯小白",
+              "confidence": "low",
               "reasoning": "帖子「芯片这波能涨到什么时候...」 命中1个小信号: 身份自述(8分)。 标题极短+情绪化，典型小白特征 综合得分54.0分， 判定为「纯小白」 (置信度: low)。",
               "sentiment": 1.0,
               "intent": "neutral",
+              "intent_strength": 0,
               "intent_label": "⚪ 观望",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 刚入)"
               ]
             },
             {
+              "post_id": "xhs_sim_semiconductor_9",
               "title": "芯片还能涨多久啊",
+              "full_title": "芯片还能涨多久啊",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "已经上车半个月了，每天都在涨，有点慌。会不会突然大跌？要不要先卖一部分？",
               "score": 50.0,
               "level": "纯小白",
+              "confidence": "low",
               "reasoning": "帖子「芯片还能涨多久啊...」 命中1个小信号: 决策依赖(7分)。 标题极短+情绪化，典型小白特征 综合得分50.0分， 判定为「纯小白」 (置信度: low)。",
               "sentiment": -1.0,
               "intent": "buy",
+              "intent_strength": 0.2,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
               ]
             },
             {
+              "post_id": "xhs_sim_semiconductor_12",
               "title": "新手刚买了半导体ETF求带",
+              "full_title": "新手刚买了半导体ETF求带",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "今天第一天入市买了半导体ETF，什么都不懂，有没有一起交流的群？互相学习",
               "score": 50.0,
               "level": "纯小白",
+              "confidence": "medium",
               "reasoning": "帖子「新手刚买了半导体ETF求带...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 命中1个专业信号: 专业术语(-5分)。 综合得分50.0分， 判定为「纯小白」 (置信度: medium)。",
               "sentiment": 0.0,
               "intent": "buy",
+              "intent_strength": 0.2,
               "intent_label": "🟢 买入",
               "key_signals": [
                 "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            }
+          ]
+        },
+        "cnkr_semi": {
+          "index": 71.0,
+          "interpretation": "🟠 高度警惕 — 小白大量涌入，市场情绪过热，建议大幅减仓",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 11,
+            "pure_newbie": 9,
+            "newbie_ratio": 91.7,
+            "avg_newbie_score": 59.0,
+            "avg_sentiment": 36.4,
+            "purity_signal": 81.8,
+            "activity": 15.0,
+            "mom_buy_index": 38.2,
+            "mom_sell_index": 24.4,
+            "buy_sell_ratio": 2.0,
+            "buy_count": 6,
+            "sell_count": 3
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_cnkr_semi_5",
+              "title": "听说513310是网红基金能不能上车",
+              "full_title": "听说513310是网红基金能不能上车",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "小红书都在刷这个基金，好多姐妹晒收益。小白不懂但心动，这种爆款基金现在进去是不是接盘侠？",
+              "score": 100,
+              "level": "纯小白",
+              "confidence": "high",
+              "reasoning": "帖子「听说513310是网红基金能不能上车...」 命中4个小信号: 身份自述(8分), 知识求助(6分), 决策依赖(7分), 跟风行为(6分)。 综合得分100分， 判定为「纯小白」 (置信度: high)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_cnkr_semi_0",
+              "title": "中韩半导体还能买吗513310",
+              "full_title": "中韩半导体还能买吗513310",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "听说513310今天又涨了七个点，身边好几个同事都在讨论。小白第一次听说这种跨境ETF，现在追还来得及吗？求大佬指点",
+              "score": 74.0,
+              "level": "纯小白",
+              "confidence": "high",
+              "reasoning": "帖子「中韩半导体还能买吗513310...」 命中3个小信号: 身份自述(8分), 知识求助(6分), 跟风行为(6分)。 命中1个专业信号: 专业术语(-5分)。 综合得分74.0分， 判定为「纯小白」 (置信度: high)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白, 第一次)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 大佬)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 听说)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_cnkr_semi_11",
+              "title": "中韩芯片基金我今天清仓了",
+              "full_title": "中韩芯片基金我今天清仓了",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "前段时间赚了点今天落袋为安了，结果同事说要继续涨，纠结要不要再买回来。小白拿不定主意啊",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「中韩芯片基金我今天清仓了...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 1.0,
+              "intent": "sell",
+              "intent_strength": 0.2,
+              "intent_label": "🔴 卖出",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_cnkr_semi_9",
+              "title": "纯小白求教513310怎么操作",
+              "full_title": "纯小白求教513310怎么操作",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "刚工作的小白想试试理财，看513310最近很火但完全不知道怎么买、需要什么账户、最低多少钱能买？",
+              "score": 66.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「纯小白求教513310怎么操作...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 综合得分66.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 怎么买)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_cnkr_semi_7",
+              "title": "513310今天涨停了我还没买",
+              "full_title": "513310今天涨停了我还没买",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "听朋友推荐买了点今天直接涨停赚了一千多，好后悔买少了。要不要再加点仓？感觉行情还在",
+              "score": 58.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「513310今天涨停了我还没买...」 命中2个小信号: 决策依赖(7分), 情绪恐慌(5分)。 综合得分58.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 1.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 后悔)"
+              ]
+            }
+          ]
+        },
+        "xiaomi": {
+          "index": 56.9,
+          "interpretation": "🟡 开始升温 — 小白活跃度明显上升，需保持关注",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 9,
+            "pure_newbie": 5,
+            "newbie_ratio": 75.0,
+            "avg_newbie_score": 53.4,
+            "avg_sentiment": 25.9,
+            "purity_signal": 55.6,
+            "activity": 15.0,
+            "mom_buy_index": 31.4,
+            "mom_sell_index": 22.2,
+            "buy_sell_ratio": 2.0,
+            "buy_count": 4,
+            "sell_count": 2
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_xiaomi_3",
+              "title": "小白买了小米被套了怎么办",
+              "full_title": "小白买了小米被套了怎么办",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "上个月30块冲进去的小米，现在跌到22了。同事说长期看好但我看着账户天天亏心态快崩了，要不要割肉啊求安慰",
+              "score": 100,
+              "level": "纯小白",
+              "confidence": "high",
+              "reasoning": "帖子「小白买了小米被套了怎么办...」 命中4个小信号: 身份自述(8分), 决策依赖(7分), 情绪恐慌(5分), 过度乐观(4分)。 综合得分100分， 判定为「纯小白」 (置信度: high)。",
+              "sentiment": -0.33,
+              "intent": "sell",
+              "intent_strength": 0.8,
+              "intent_label": "🔴 卖出",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「情绪恐慌」表达明显的恐惧/焦虑/后悔情绪 (命中: 割肉)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_xiaomi_9",
+              "title": "新手想All in小米股票",
+              "full_title": "新手想All in小米股票",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看好雷军和小米生态链，想把攒的5万块全买小米股票。但是身边人都说我疯了，到底该不该All in？",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「新手想All in小米股票...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 该不该)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_xiaomi_5",
+              "title": "港股小米和A股小米有啥区别",
+              "full_title": "港股小米和A股小米有啥区别",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻说小米在港股上市，那我能不能通过A股账户买？还是要专门开港股通？完全不懂求科普",
+              "score": 62.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「港股小米和A股小米有啥区别...」 命中2个小信号: 知识求助(6分), 决策依赖(7分)。 综合得分62.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_xiaomi_11",
+              "title": "小米手机卖不出去了股票咋办",
+              "full_title": "小米手机卖不出去了股票咋办",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "新闻说小米手机销量暴跌40%，这种基本面变差了是不是股票也不能买了？小白要不要换别的科技股？",
+              "score": 54.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「小米手机卖不出去了股票咋办...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 综合得分54.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": -1.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: 基本面)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_xiaomi_0",
+              "title": "小米股票跌成这样还能买吗",
+              "full_title": "小米股票跌成这样还能买吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "一直想入手小米，看同事晒港股赚的心里痒痒。但是最近小米跌了快60%了，现在买是不是抄在半山腰？小白求指点",
+              "score": 50.0,
+              "level": "纯小白",
+              "confidence": "low",
+              "reasoning": "帖子「小米股票跌成这样还能买吗...」 命中1个小信号: 身份自述(8分)。 以问句结尾，在寻求答案 综合得分50.0分， 判定为「纯小白」 (置信度: low)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.6,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)"
+              ]
+            }
+          ]
+        },
+        "tencent": {
+          "index": 63.0,
+          "interpretation": "🟠 高度警惕 — 小白大量涌入，市场情绪过热，建议大幅减仓",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 11,
+            "spam_posts": 1,
+            "newbie_posts": 9,
+            "pure_newbie": 7,
+            "newbie_ratio": 81.8,
+            "avg_newbie_score": 56.8,
+            "avg_sentiment": 22.2,
+            "purity_signal": 77.8,
+            "activity": 13.8,
+            "mom_buy_index": 35.4,
+            "mom_sell_index": 10.1,
+            "buy_sell_ratio": 5.0,
+            "buy_count": 5,
+            "sell_count": 1
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_tencent_0",
+              "title": "腾讯00700跌到400块了要不要买",
+              "full_title": "腾讯00700跌到400块了要不要买",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻腾讯都跌到400多了，从600多跌下来的。大家都说企鹅是白马股，现在是不是抄底机会？小白刚开户求带",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「腾讯00700跌到400块了要不要买...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 1.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_tencent_9",
+              "title": "南向资金一直卖腾讯要不要跑",
+              "full_title": "南向资金一直卖腾讯要不要跑",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻说南向资金连续5天卖出腾讯了，内资都跑了是不是说明有大问题？小白要不要跟着先跑？",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「南向资金一直卖腾讯要不要跑...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "sell",
+              "intent_strength": 0.2,
+              "intent_label": "🔴 卖出",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_tencent_11",
+              "title": "小白抄作业全仓腾讯行不行",
+              "full_title": "小白抄作业全仓腾讯行不行",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看了几个大V都说企鹅便宜了想抄作业全仓买入，但是不是好公司不等于好股票？小白要不要All in？",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「小白抄作业全仓腾讯行不行...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要, 行不行)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_tencent_5",
+              "title": "腾讯游戏不行了是不是坑",
+              "full_title": "腾讯游戏不行了是不是坑",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "听朋友说腾讯游戏增长见顶了，而且未成年人保护限制很多。这种情况下买腾讯股票是不是接盘？小白求分析",
+              "score": 59.6,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「腾讯游戏不行了是不是坑...」 命中2个小信号: 身份自述(8分), 跟风行为(6分)。 命中1个专业信号: 冷静表达(-2分)。 综合得分59.6分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 朋友说)",
+                "「冷静表达」理性分析，客观陈述，无情绪化表达 (命中: 分析)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_tencent_1",
+              "title": "港股腾讯怎么买最低多少钱",
+              "full_title": "港股腾讯怎么买最低多少钱",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "想入手腾讯但完全没买过港股，最低多少钱能买一手？听说腾讯一手就要四五万块人民币是真的吗？",
+              "score": 58.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「港股腾讯怎么买最低多少钱...」 命中2个小信号: 知识求助(6分), 跟风行为(6分)。 综合得分58.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 怎么买)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 听说)"
+              ]
+            }
+          ]
+        },
+        "meituan": {
+          "index": 57.6,
+          "interpretation": "🟡 开始升温 — 小白活跃度明显上升，需保持关注",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 10,
+            "pure_newbie": 4,
+            "newbie_ratio": 83.3,
+            "avg_newbie_score": 46.6,
+            "avg_sentiment": 33.3,
+            "purity_signal": 40.0,
+            "activity": 15.0,
+            "mom_buy_index": 26.7,
+            "mom_sell_index": 13.4,
+            "buy_sell_ratio": 4.0,
+            "buy_count": 4,
+            "sell_count": 1
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_meituan_3",
+              "title": "美团投资宇树科技是不是利好",
+              "full_title": "美团投资宇树科技是不是利好",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "新闻说美团是宇树科技最大股东，占股快10%了。投资机器人公司对美团股价是不是利好？小白完全看不懂",
+              "score": 66.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美团投资宇树科技是不是利好...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 综合得分66.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
                 "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_meituan_2",
+              "title": "美团APP升级AI Agent是什么逻辑",
+              "full_title": "美团APP升级AI Agent是什么逻辑",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看CEO王兴说要用AI改造美团APP，小白不太懂这个。AI概念能不能让美团股价翻身？要不要提前布局？",
+              "score": 63.6,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美团APP升级AI Agent是什么逻辑...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 冷静表达(-2分)。 综合得分63.6分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要, 能不能)",
+                "「冷静表达」理性分析，客观陈述，无情绪化表达 (命中: 逻辑)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_meituan_11",
+              "title": "新手刚买美团就被套怎么办",
+              "full_title": "新手刚买美团就被套怎么办",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "上周150块买的美团现在跌到130了，第一次买股票就亏钱心态有点崩。要不要先止损出来换别的？求安慰",
+              "score": 57.2,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「新手刚买美团就被套怎么办...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 策略思维(-4分)。 综合得分57.2分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": -1.0,
+              "intent": "sell",
+              "intent_strength": 0.4,
+              "intent_label": "🔴 卖出",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手, 第一次)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「策略思维」讨论定投/仓位/分散/对冲/止损等策略 (命中: 止损)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_meituan_0",
+              "title": "美团03690还能回到200吗",
+              "full_title": "美团03690还能回到200吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻美团已经从300多跌到现在100多了。曾经的大白马现在还能回得去吗？小白想抄底但又怕越买越跌",
+              "score": 50.0,
+              "level": "纯小白",
+              "confidence": "low",
+              "reasoning": "帖子「美团03690还能回到200吗...」 命中1个小信号: 身份自述(8分)。 以问句结尾，在寻求答案 综合得分50.0分， 判定为「纯小白」 (置信度: low)。",
+              "sentiment": 1.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_meituan_8",
+              "title": "美团硬科技投资版图值得买吗",
+              "full_title": "美团硬科技投资版图值得买吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "新闻说美团投了16家机器人公司还有AI芯片公司，这种科技投资能不能让美团从外卖公司升级成科技公司？",
+              "score": 46.0,
+              "level": "偏小白",
+              "confidence": "low",
+              "reasoning": "帖子「美团硬科技投资版图值得买吗...」 命中1个小信号: 决策依赖(7分)。 以问句结尾，在寻求答案 综合得分46.0分， 判定为「偏小白」 (置信度: low)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)"
+              ]
+            }
+          ]
+        },
+        "hangseng_tech": {
+          "index": 50.5,
+          "interpretation": "🟡 开始升温 — 小白活跃度明显上升，需保持关注",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 8,
+            "pure_newbie": 4,
+            "newbie_ratio": 66.7,
+            "avg_newbie_score": 45.2,
+            "avg_sentiment": 25.0,
+            "purity_signal": 50.0,
+            "activity": 15.0,
+            "mom_buy_index": 40.2,
+            "mom_sell_index": 10.8,
+            "buy_sell_ratio": 5.0,
+            "buy_count": 5,
+            "sell_count": 1
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_hangseng_tech_10",
+              "title": "恒生科技现在适合新手建仓吗",
+              "full_title": "恒生科技现在适合新手建仓吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "新手刚开户想建仓恒生科技ETF，但是看好多人说港股还要继续跌。到底是机会还是陷阱现在能不能买？",
+              "score": 62.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「恒生科技现在适合新手建仓吗...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 以问句结尾，在寻求答案 综合得分62.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 新手)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 能不能)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_hangseng_tech_3",
+              "title": "513130场内价格比净值高能买吗",
+              "full_title": "513130场内价格比净值高能买吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻说恒生科技ETF场内价格溢价好几个点，这种情况下买是不是会被套？小白不懂溢价是什么意思求教",
+              "score": 58.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「513130场内价格比净值高能买吗...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 命中1个专业信号: 专业术语(-5分)。 以问句结尾，在寻求答案 综合得分58.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "sell",
+              "intent_strength": 0.2,
+              "intent_label": "🔴 卖出",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂, 什么意思)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_hangseng_tech_8",
+              "title": "513130折价了反而更便宜吗",
+              "full_title": "513130折价了反而更便宜吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻说恒生科技ETF出现了折价，折价是不是说明我买得更便宜了？小白搞不懂折价和溢价的区别",
+              "score": 58.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「513130折价了反而更便宜吗...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 命中1个专业信号: 专业术语(-5分)。 以问句结尾，在寻求答案 综合得分58.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: 折价, ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_hangseng_tech_0",
+              "title": "恒生科技ETF怎么买最低多少钱",
+              "full_title": "恒生科技ETF怎么买最低多少钱",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看小红书好多人在晒513130的收益，小白也想入手。但是没买过场内基金，最低多少钱能买？需要什么账户？",
+              "score": 50.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「恒生科技ETF怎么买最低多少钱...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 命中1个专业信号: 专业术语(-5分)。 综合得分50.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 怎么买)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_hangseng_tech_6",
+              "title": "小白定投恒生科技每周500行不行",
+              "full_title": "小白定投恒生科技每周500行不行",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "想养成理财习惯每周定投500块恒生科技ETF，但是定投单一行业ETF是不是风险太大？要不要分散买几只？",
+              "score": 41.2,
+              "level": "偏小白",
+              "confidence": "high",
+              "reasoning": "帖子「小白定投恒生科技每周500行不行...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中2个专业信号: 专业术语(-5分), 策略思维(-4分)。 综合得分41.2分， 判定为「偏小白」 (置信度: high)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要, 行不行)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            }
+          ]
+        },
+        "dividend": {
+          "index": 51.2,
+          "interpretation": "🟡 开始升温 — 小白活跃度明显上升，需保持关注",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 8,
+            "pure_newbie": 6,
+            "newbie_ratio": 66.7,
+            "avg_newbie_score": 53.1,
+            "avg_sentiment": 0.0,
+            "purity_signal": 75.0,
+            "activity": 15.0,
+            "mom_buy_index": 40.6,
+            "mom_sell_index": 0.0,
+            "buy_sell_ratio": 5.0,
+            "buy_count": 5,
+            "sell_count": 0
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_dividend_10",
+              "title": "000922现在价位高不高能买吗",
+              "full_title": "000922现在价位高不高能买吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看中证红利从1块涨到1块6了，现在入手是不是追高了？小白不懂估值求教现在的价位合不合适",
+              "score": 86.0,
+              "level": "纯小白",
+              "confidence": "high",
+              "reasoning": "帖子「000922现在价位高不高能买吗...」 命中3个小信号: 身份自述(8分), 知识求助(6分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 以问句结尾，在寻求答案 综合得分86.0分， 判定为「纯小白」 (置信度: high)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 不懂)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 现在入手)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_dividend_4",
+              "title": "中证红利指数包含哪些股票",
+              "full_title": "中证红利指数包含哪些股票",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "听说中证红利有银行煤炭长江电力，这些传统行业是不是夕阳产业？现在还能长期持有吗小白求科普",
+              "score": 56.4,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「中证红利指数包含哪些股票...」 命中2个小信号: 身份自述(8分), 跟风行为(6分)。 命中1个专业信号: 长期视角(-3分)。 综合得分56.4分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 听说)",
+                "「长期视角」讨论长期趋势/定投计划/年度收益 (命中: 长期持有)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_dividend_5",
+              "title": "红利ETF分红要不要再买入",
+              "full_title": "红利ETF分红要不要再买入",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "刚收到000922的分红了，红利再投是不是复利效应更香？小白应该分红再买入还是先取出来补贴家用？",
+              "score": 54.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「红利ETF分红要不要再买入...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 综合得分54.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_dividend_8",
+              "title": "红利ETF会不会一直跌不涨",
+              "full_title": "红利ETF会不会一直跌不涨",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看新闻说红利策略最近几年跑输成长股，担心买了红利ETF就一直不涨只吃分红。小白要不要换成长风格的？",
+              "score": 54.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「红利ETF会不会一直跌不涨...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 专业术语(-5分)。 综合得分54.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_dividend_0",
+              "title": "红利ETF怎么买最低多少钱",
+              "full_title": "红利ETF怎么买最低多少钱",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "看小红书好多人晒000922的收益，每年分红6个点很香。小白想入手但是没买过场内，最低多少钱能买？需要什么账户？",
+              "score": 50.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「红利ETF怎么买最低多少钱...」 命中2个小信号: 身份自述(8分), 知识求助(6分)。 命中1个专业信号: 专业术语(-5分)。 综合得分50.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.4,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 怎么买)",
+                "「专业术语」使用PE/PB/ROE/基本面/技术面/估值等专业词汇 (命中: ETF)"
+              ]
+            }
+          ]
+        },
+        "micron": {
+          "index": 69.5,
+          "interpretation": "🟠 高度警惕 — 小白大量涌入，市场情绪过热，建议大幅减仓",
+          "details": {
+            "total_posts": 12,
+            "valid_posts": 12,
+            "spam_posts": 0,
+            "newbie_posts": 10,
+            "pure_newbie": 9,
+            "newbie_ratio": 83.3,
+            "avg_newbie_score": 66.6,
+            "avg_sentiment": 30.0,
+            "purity_signal": 90.0,
+            "activity": 15.0,
+            "mom_buy_index": 20.8,
+            "mom_sell_index": 21.6,
+            "buy_sell_ratio": 3.0,
+            "buy_count": 3,
+            "sell_count": 1
+          },
+          "top_newbie_posts": [
+            {
+              "post_id": "xhs_sim_micron_0",
+              "title": "美光科技怎么买小白求教",
+              "full_title": "美光科技怎么买小白求教",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "听说美光存储芯片涨价业绩爆了，看新闻股价都1000美金了。小白怎么买美光啊？需要美股账户吗？港股通能买吗？",
+              "score": 100,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美光科技怎么买小白求教...」 命中3个小信号: 身份自述(8分), 知识求助(6分), 跟风行为(6分)。 标题极短+情绪化，典型小白特征 综合得分100分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「知识求助」在问基础问题（怎么买/在哪看/什么意思） (命中: 怎么买)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 听说)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_micron_2",
+              "title": "美光存储芯片值得长期持有吗",
+              "full_title": "美光存储芯片值得长期持有吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "AI算力需求带火HBM存储，美光是全球三巨头之一。听说机构目标价都看到2000美金了，小白要不要长期拿5年？",
+              "score": 92.4,
+              "level": "纯小白",
+              "confidence": "high",
+              "reasoning": "帖子「美光存储芯片值得长期持有吗...」 命中3个小信号: 身份自述(8分), 决策依赖(7分), 跟风行为(6分)。 命中1个专业信号: 长期视角(-3分)。 以问句结尾，在寻求答案 综合得分92.4分， 判定为「纯小白」 (置信度: high)。",
+              "sentiment": 0.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「跟风行为」提及跟别人买/听说/博主推荐/朋友说 (命中: 听说)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_micron_9",
+              "title": "美光财报超预期要追吗",
+              "full_title": "美光财报超预期要追吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "刚出财报业绩超预期，机构上调目标价到2000美金。夜盘又涨18%但是不知道明天开盘会怎么样，小白要不要追？",
+              "score": 78.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美光财报超预期要追吗...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 以问句结尾，在寻求答案 综合得分78.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 0.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_micron_8",
+              "title": "美光1000美金股价是不是泡沫",
+              "full_title": "美光1000美金股价是不是泡沫",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "1股1000美金好吓人！身边人说美光业绩好不算泡沫，也有人说涨幅过大迟早崩盘。小白到底要不要上车？",
+              "score": 70.0,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美光1000美金股价是不是泡沫...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 综合得分70.0分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": -1.0,
+              "intent": "buy",
+              "intent_strength": 0.2,
+              "intent_label": "🟢 买入",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)"
+              ]
+            },
+            {
+              "post_id": "xhs_sim_micron_11",
+              "title": "美光涨这么猛小白该止盈吗",
+              "full_title": "美光涨这么猛小白该止盈吗",
+              "platform": "xiaohongshu",
+              "url": "",
+              "content": "今年涨了快3倍了，身边人都说美股科技股泡沫迟早要崩。小白赚了40%要不要先止盈落袋为安？求指点",
+              "score": 65.2,
+              "level": "纯小白",
+              "confidence": "medium",
+              "reasoning": "帖子「美光涨这么猛小白该止盈吗...」 命中2个小信号: 身份自述(8分), 决策依赖(7分)。 命中1个专业信号: 策略思维(-4分)。 以问句结尾，在寻求答案 综合得分65.2分， 判定为「纯小白」 (置信度: medium)。",
+              "sentiment": 1.0,
+              "intent": "neutral",
+              "intent_strength": 0,
+              "intent_label": "⚪ 观望",
+              "key_signals": [
+                "「身份自述」明确自称小白/新手/刚入门/宝妈 (命中: 小白)",
+                "「决策依赖」请求他人替自己做投资决策（该不该/要不要/能不能） (命中: 要不要)",
+                "「策略思维」讨论定投/仓位/分散/对冲/止损等策略 (命中: 止盈)"
               ]
             }
           ]

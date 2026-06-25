@@ -15,6 +15,12 @@ SECTOR_NAMES = {
     "cpo": "CPO通信",
     "semiconductor": "半导体",
     "cnkr_semi": "中韩半导体",
+    "xiaomi": "小米集团",
+    "tencent": "腾讯控股",
+    "meituan": "美团",
+    "hangseng_tech": "恒生科技",
+    "dividend": "中证红利",
+    "micron": "美光科技",
 }
 
 
@@ -30,9 +36,24 @@ def compute_sector_index(analysis_results: List) -> Dict:
     """
     if not analysis_results:
         return {
-            "index": 0, 
+            "index": 0,
             "interpretation": "无数据",
-            "details": {}
+            "details": {
+                "total_posts": 0,
+                "valid_posts": 0,
+                "spam_posts": 0,
+                "newbie_posts": 0,
+                "pure_newbie": 0,
+                "newbie_ratio": 0,
+                "avg_newbie_score": 0,
+                "avg_sentiment": 0,
+                "purity_signal": 0,
+                "activity": 0,
+            },
+            "buy_index": 0,
+            "sell_index": 0,
+            "buy_sell_ratio": 0,
+            "top_newbie_posts": [],
         }
     
     total = len(analysis_results)
@@ -119,14 +140,21 @@ def compute_sector_index(analysis_results: List) -> Dict:
         },
         "top_newbie_posts": [
             {
+                "post_id": r.post_id,
                 "title": r.title[:60],
+                "full_title": r.title,
+                "platform": r.platform,
+                "url": r.url,
+                "content": r.content,
                 "score": r.newbie_score,
                 "level": r.level,
-                "reasoning": r.reasoning[:150],
+                "confidence": r.newbie_confidence,
+                "reasoning": r.reasoning[:200],
                 "sentiment": r.sentiment_score,
                 "intent": r.intent,
+                "intent_strength": r.intent_strength,
                 "intent_label": {"buy": "🟢 买入", "sell": "🔴 卖出", "neutral": "⚪ 观望"}.get(r.intent, ""),
-                "key_signals": r.key_signals[:2],
+                "key_signals": r.key_signals[:3],
             }
             for r in sorted(newbie_posts, key=lambda x: x.newbie_score, reverse=True)[:5]
         ],
@@ -192,14 +220,9 @@ def get_dashboard_data() -> Dict:
     # 最新一条
     latest = records[-1] if records else None
     
-    # 为每个板块准备历史曲线数据
-    sector_history = {
-        "nasdaq": [],
-        "gold": [],
-        "cpo": [],
-        "semiconductor": [],
-    }
-    
+    # 为每个板块准备历史曲线数据 — 动态从 SECTOR_NAMES 取所有已知板块
+    sector_history = {key: [] for key in SECTOR_NAMES.keys()}
+
     for r in records:
         for sector, data in r.get("sectors", {}).items():
             if sector in sector_history:
@@ -212,4 +235,25 @@ def get_dashboard_data() -> Dict:
         "latest": latest,
         "sector_history": sector_history,
         "record_count": len(records),
+        "etf_map": _build_etf_map(),
     }
+
+
+def _build_etf_map() -> Dict[str, str]:
+    """股票代码 → 板块key 的映射, 支持多种输入格式"""
+    try:
+        from collectors.guba_collector import SECTORS
+    except ImportError:
+        return {}
+    etf_map = {}
+    for sector_key, cfg in SECTORS.items():
+        etf = cfg.get("etf", "")
+        if etf:
+            # 支持 6位/5位代码 + 港股0前缀
+            etf_map[etf] = sector_key            # 原始 ETF 代码
+            etf_map[etf.lstrip("0")] = sector_key  # 去前导 0
+        # 也支持 name 模糊匹配
+        name = cfg.get("name", "")
+        if name:
+            etf_map[name] = sector_key
+    return etf_map

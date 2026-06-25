@@ -123,6 +123,12 @@ def generate_sample_history(days: int = 30):
         "cpo": 22,
         "semiconductor": 30,
         "cnkr_semi": 32,
+        "xiaomi": 55,
+        "tencent": 40,
+        "meituan": 48,
+        "hangseng_tech": 50,
+        "dividend": 25,
+        "micron": 65,
     }
     
     today = datetime.now()

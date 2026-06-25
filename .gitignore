@@ -30,3 +30,7 @@ desktop.ini
 
 # Chrome profiles (Playwright)
 *.pw_profile/
+
+# Vercel
+.vercel/
+# Note: public/ 目录需被提交 (Vercel 静态托管)

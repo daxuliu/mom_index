@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动态股票查询 · 宝妈指数</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .header h1 { font-size: 22px; background: linear-gradient(90deg, #06b6d4, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .back-link { color: #94a3b8; text-decoration: none; font-size: 13px; padding: 6px 14px; border: 1px solid #334155; border-radius: 6px; transition: all 0.2s; }
+    .back-link:hover { color: #e2e8f0; border-color: #06b6d4; }
+
+    .query-box {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .query-box h2 { font-size: 16px; color: #94a3b8; margin-bottom: 16px; font-weight: 500; }
+    .input-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .input-row input {
+      flex: 1;
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-row input:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.15); }
+    .input-row button {
+      background: linear-gradient(90deg, #06b6d4, #3b82f6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      min-width: 100px;
+    }
+    .input-row button:hover:not(:disabled) { opacity: 0.85; }
+    .input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .hints { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 11px; color: #64748b; }
+    .hints .label { margin-right: 4px; }
+    .hint-chip {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 4px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 12px;
+    }
+    .hint-chip:hover { background: #334155; color: #e2e8f0; border-color: #06b6d4; }
+
+    .progress { display: none; margin-top: 16px; padding: 12px 16px; background: rgba(6,182,212,0.08); border-radius: 8px; border-left: 3px solid #06b6d4; }
+    .progress.show { display: block; }
+    .progress-step { display: flex; align-items: center; gap: 10px; padding: 4px 0; font-size: 13px; }
+    .progress-step .icon { width: 18px; text-align: center; }
+    .progress-step.done { color: #4ade80; }
+    .progress-step.active { color: #06b6d4; }
+    .progress-step.pending { color: #475569; }
+
+    .result-card { display: none; background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+    .result-card.show { display: block; }
+    .result-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+    .result-title { font-size: 22px; font-weight: 700; color: #e2e8f0; line-height: 1.3; }
+    .result-title .market-tag { display: inline-block; background: #334155; color: #cbd5e1; padding: 3px 10px; border-radius: 10px; font-size: 11px; margin-left: 8px; font-weight: 400; }
+    .result-title .guba-tag { display: inline-block; background: rgba(6,182,212,0.15); color: #67e8f9; padding: 3px 10px; border-radius: 10px; font-size: 11px; margin-left: 4px; font-family: monospace; }
+    .result-index-block { display: flex; align-items: center; gap: 16px; }
+    .result-index-num { font-size: 56px; font-weight: 800; line-height: 1; }
+    .result-signal { padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+    .signal-healthy { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .signal-warming { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .signal-warning { background: rgba(239,68,68,0.15); color: #f87171; }
+    .signal-neutral { background: rgba(100,116,139,0.15); color: #94a3b8; }
+
+    .result-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat-box { background: rgba(15,23,42,0.6); padding: 14px; border-radius: 8px; text-align: center; border: 1px solid #334155; }
+    .stat-box .label { font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-box .value { font-size: 20px; font-weight: 700; color: #e2e8f0; margin-top: 6px; }
+    .stat-box .value.up { color: #4ade80; }
+    .stat-box .value.down { color: #f87171; }
+
+    .section-title { font-size: 14px; color: #94a3b8; margin: 24px 0 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+    .post-item {
+      background: rgba(15,23,42,0.6);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .post-item:hover { background: rgba(15,23,42,0.9); border-color: #06b6d4; transform: translateX(2px); }
+    .post-title { font-size: 13px; color: #e2e8f0; line-height: 1.5; }
+    .post-badge { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 11px; margin-right: 6px; font-weight: 600; }
+    .badge-pure { background: rgba(239,68,68,0.2); color: #fca5a5; }
+    .badge-semi { background: rgba(251,191,36,0.2); color: #fde68a; }
+    .badge-novice { background: rgba(34,197,94,0.2); color: #86efac; }
+    .post-meta-row { font-size: 11px; color: #64748b; margin-top: 6px; }
+
+    .error-box { display: none; margin-top: 16px; padding: 14px 16px; background: rgba(239,68,68,0.1); border-left: 3px solid #ef4444; border-radius: 6px; color: #fca5a5; font-size: 13px; line-height: 1.6; }
+    .error-box.show { display: block; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.show { display: flex; animation: fadeIn 0.2s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal { background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; border-radius: 16px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .modal-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .modal-close { background: none; border: none; color: #94a3b8; font-size: 24px; cursor: pointer; line-height: 1; padding: 0; }
+    .modal-close:hover { color: #e2e8f0; }
+    .modal-title { font-size: 16px; font-weight: 600; color: #e2e8f0; line-height: 1.4; flex: 1; }
+    .modal-section { margin-top: 16px; }
+    .modal-section-title { font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .modal-content { background: rgba(0,0,0,0.3); border-left: 3px solid #06b6d4; padding: 10px; border-radius: 4px; color: #cbd5e1; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+    .modal-reason { background: rgba(251,191,36,0.08); border-left: 3px solid #fbbf24; padding: 10px; border-radius: 4px; color: #fde68a; font-size: 12px; line-height: 1.6; }
+    .modal-signal { font-size: 12px; color: #cbd5e1; padding: 3px 0; }
+    .modal-signal::before { content: '▸ '; color: #06b6d4; }
+    .modal-actions { margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155; display: flex; gap: 8px; justify-content: flex-end; }
+    .modal-btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; border: none; transition: opacity 0.2s; text-decoration: none; display: inline-block; }
+    .modal-btn:hover { opacity: 0.85; }
+    .modal-btn-primary { background: linear-gradient(90deg, #06b6d4, #3b82f6); color: white; }
+    .modal-btn-secondary { background: #334155; color: #cbd5e1; }
+
+    .footer { text-align: center; padding: 32px 0; color: #475569; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🔍 动态股票情绪查询</h1>
+      <a class="back-link" href="/dashboard.html">← 返回主看板</a>
+    </div>
+
+    <div class="query-box">
+      <h2>输入任意股票代码，实时抓取股吧帖子并分析情绪</h2>
+      <div class="input-row">
+        <input type="text" id="code-input" placeholder="支持格式: 513310 / sh513310 / usMU / MU / hk00700 / 00700 / 000922" autocomplete="off" />
+        <button id="query-btn" onclick="doQuery()">查询</button>
+      </div>
+      <div class="hints">
+        <span class="label">试试:</span>
+        <span class="hint-chip" onclick="quickQuery('513310')">513310 (中韩半导体)</span>
+        <span class="hint-chip" onclick="quickQuery('usMU')">usMU (美光)</span>
+        <span class="hint-chip" onclick="quickQuery('NVDA')">NVDA (英伟达)</span>
+        <span class="hint-chip" onclick="quickQuery('TSLA')">TSLA (特斯拉)</span>
+        <span class="hint-chip" onclick="quickQuery('hk00700')">hk00700 (腾讯)</span>
+        <span class="hint-chip" onclick="quickQuery('000922')">000922 (红利)</span>
+        <span class="hint-chip" onclick="quickQuery('sh600519')">sh600519 (贵州茅台)</span>
+        <span class="hint-chip" onclick="quickQuery('300750')">300750 (宁德时代)</span>
+      </div>
+
+      <div class="progress" id="progress">
+        <div class="progress-step pending" id="step-fetch"><span class="icon">○</span> 1. 抓取股吧数据</div>
+        <div class="progress-step pending" id="step-analyze"><span class="icon">○</span> 2. LLM 分析每条帖子</div>
+        <div class="progress-step pending" id="step-index"><span class="icon">○</span> 3. 计算情绪指数</div>
+      </div>
+
+      <div class="error-box" id="error-box"></div>
+    </div>
+
+    <div class="result-card" id="result">
+      <div class="result-header">
+        <div>
+          <div class="result-title" id="r-title"></div>
+        </div>
+        <div class="result-index-block">
+          <div class="result-index-num" id="r-index">-</div>
+          <div class="result-signal signal-neutral" id="r-signal">分析中</div>
+        </div>
+      </div>
+
+      <div class="result-stats" id="r-stats"></div>
+
+      <div class="section-title">🔥 最小白 Top 帖子</div>
+      <div id="r-posts"></div>
+    </div>
+
+    <div class="footer">
+      数据来源: 东方财富股吧 · 实时采集 · LLM 分析<br>
+      指数越高 = 小白越活跃 = 市场情绪越危险<br>
+      <span style="color:#64748b">⚠️ 仅供参考，不构成投资建议</span>
+    </div>
+  </div>
+
+  <!-- 详情弹窗 -->
+  <div class="modal-overlay" id="post-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="m-title"></div>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">📄 帖子正文</div>
+        <div class="modal-content" id="m-content"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">🧠 判定推理</div>
+        <div class="modal-reason" id="m-reason"></div>
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">🎯 命中信号</div>
+        <div id="m-signals"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-secondary" onclick="closeModal()">关闭</button>
+        <a class="modal-btn modal-btn-primary" id="m-link" href="#" target="_blank" rel="noopener">🔗 查看原帖</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 智能识别提示 (输入时实时反馈)
+    const codeInput = document.getElementById('code-input');
+    codeInput.addEventListener('input', () => updateInputHint(codeInput.value.trim()));
+    codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') doQuery(); });
+    updateInputHint('');
+
+    function updateInputHint(code) {
+      if (!code) { codeInput.title = ''; return; }
+      const c = code.toUpperCase();
+      if (/^(SH|SZ|OF|HK|US)/.test(c)) {
+        codeInput.title = '已带前缀，将直接拼接股吧 URL';
+      } else if (/^\d{6}$/.test(c)) {
+        codeInput.title = '将自动加 sh 前缀 → sh' + c + ' (A 股)';
+      } else if (/^\d{5}$/.test(c)) {
+        codeInput.title = '将自动加 hk 前缀 → hk' + c + ' (港股)';
+      } else if (/^[A-Z]{1,5}$/.test(c)) {
+        codeInput.title = '将自动加 us 前缀 → us' + c + ' (美股)';
+      } else {
+        codeInput.title = '';
+      }
+    }
+
+    function quickQuery(code) {
+      codeInput.value = code;
+      updateInputHint(code);
+      doQuery();
+    }
+
+    async function doQuery() {
+      const code = codeInput.value.trim();
+      if (!code) return;
+
+      // 重置 UI
+      document.getElementById('result').classList.remove('show');
+      document.getElementById('error-box').classList.remove('show');
+      document.getElementById('progress').classList.add('show');
+      ['step-fetch','step-analyze','step-index'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'progress-step pending';
+        el.querySelector('.icon').textContent = '○';
+      });
+
+      const btn = document.getElementById('query-btn');
+      btn.disabled = true;
+      btn.textContent = '查询中...';
+
+      // 进度动画
+      setTimeout(() => {
+        document.getElementById('step-fetch').className = 'progress-step active';
+        document.getElementById('step-fetch').querySelector('.icon').textContent = '◉';
+      }, 100);
+      setTimeout(() => {
+        document.getElementById('step-fetch').className = 'progress-step done';
+        document.getElementById('step-fetch').querySelector('.icon').textContent = '✓';
+        document.getElementById('step-analyze').className = 'progress-step active';
+        document.getElementById('step-analyze').querySelector('.icon').textContent = '◉';
+      }, 300);
+      setTimeout(() => {
+        document.getElementById('step-analyze').className = 'progress-step done';
+        document.getElementById('step-analyze').querySelector('.icon').textContent = '✓';
+        document.getElementById('step-index').className = 'progress-step active';
+        document.getElementById('step-index').querySelector('.icon').textContent = '◉';
+      }, 600);
+
+      try {
+        const resp = await fetch(`/api/query?code=${encodeURIComponent(code)}`);
+        const data = await resp.json();
+        if (data.error) throw new Error(data.error);
+
+        // 完成进度
+        ['step-fetch','step-analyze','step-index'].forEach(id => {
+          const el = document.getElementById(id);
+          el.className = 'progress-step done';
+          el.querySelector('.icon').textContent = '✓';
+        });
+
+        renderResult(data);
+      } catch (err) {
+        showError(err.message || String(err));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '查询';
+      }
+    }
+
+    function showError(msg) {
+      const box = document.getElementById('error-box');
+      box.innerHTML = `❌ 查询失败: ${msg}<br><br><span style="font-size:11px;color:#94a3b8">💡 提示: 如需采集真实数据，请确保本地代理 7890 端口可用，否则只能返回空结果。</span>`;
+      box.classList.add('show');
+    }
+
+    function renderResult(data) {
+      const info = data.code_info;
+      const idx = data.index_data;
+      const color = idx ? getIndexColor(idx.index) : '#94a3b8';
+
+      // 标题
+      document.getElementById('r-title').innerHTML = `
+        ${info.display}
+        <span class="market-tag">${info.market}</span>
+        <span class="guba-tag">${info.guba_code}</span>
+        <span style="font-size:11px;color:#64748b;margin-left:8px">⏱️ ${data.duration_ms}ms</span>
+      `;
+
+      // 指数
+      const idxEl = document.getElementById('r-index');
+      const sigEl = document.getElementById('r-signal');
+      if (idx) {
+        idxEl.textContent = idx.index.toFixed(1);
+        idxEl.style.color = color;
+        const sigText = idx.interpretation || '暂无数据';
+        sigEl.textContent = sigText.split('—')[0].trim();
+        sigEl.className = 'result-signal ' + getSignalClass(idx.index);
+      } else {
+        idxEl.textContent = '—';
+        idxEl.style.color = '#94a3b8';
+        sigEl.textContent = data.fetch_ok ? '数据不足' : '抓取失败';
+        sigEl.className = 'result-signal signal-neutral';
+      }
+
+      // 统计
+      const stats = idx && idx.details ? idx.details : {};
+      document.getElementById('r-stats').innerHTML = `
+        <div class="stat-box">
+          <div class="label">抓取帖子</div>
+          <div class="value">${data.post_count}</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">有效分析</div>
+          <div class="value">${idx ? (stats.valid_posts || data.post_count) : 0}</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">小白占比</div>
+          <div class="value ${idx && stats.newbie_ratio > 50 ? 'down' : ''}">${idx ? (stats.newbie_ratio || 0) + '%' : '—'}</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">🟢 宝妈买入</div>
+          <div class="value up">${idx ? (stats.mom_buy_index || 0) : '—'}</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">🔴 宝妈卖出</div>
+          <div class="value down">${idx ? (stats.mom_sell_index || 0) : '—'}</div>
+        </div>
+        <div class="stat-box">
+          <div class="label">情绪</div>
+          <div class="value">${idx ? (stats.avg_sentiment || 0).toFixed(2) : '—'}</div>
+        </div>
+      `;
+
+      // 帖子列表
+      const posts = data.sample_posts || [];
+      if (!posts.length) {
+        document.getElementById('r-posts').innerHTML = `<div style="color:#64748b;font-size:13px;padding:20px;text-align:center;">
+          ${data.fetch_error ? '⚠️ ' + data.fetch_error.slice(0, 100) : '该股票暂无典型小白帖'}
+        </div>`;
+      } else {
+        document.getElementById('r-posts').innerHTML = posts.map(p => `
+          <div class="post-item" onclick='openModal(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
+            <div class="post-title">
+              <span class="post-badge badge-${p.score >= 50 ? 'pure' : 'semi'}">
+                ${p.score >= 50 ? '纯小白' : '偏小白'} ${p.score}分
+              </span>
+              ${p.intent_label ? `<span style="font-size:11px;color:#94a3b8">${p.intent_label}</span>` : ''}
+              ${p.title}
+            </div>
+            <div class="post-meta-row">
+              ${p.platform === 'guba' ? '📊 股吧' : p.platform} · 点击查看分析详情 →
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('result').classList.add('show');
+      document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function getIndexColor(idx) {
+      if (idx >= 70) return '#ef4444';
+      if (idx >= 50) return '#fbbf24';
+      if (idx >= 30) return '#06b6d4';
+      return '#22c55e';
+    }
+    function getSignalClass(idx) {
+      if (idx >= 70) return 'signal-warning';
+      if (idx >= 50) return 'signal-warming';
+      if (idx >= 30) return 'signal-warming';
+      return 'signal-healthy';
+    }
+
+    function openModal(p) {
+      document.getElementById('m-title').textContent = p.title;
+      document.getElementById('m-content').textContent = p.content || '（无正文）';
+      document.getElementById('m-reason').textContent = p.reasoning || '（无推理信息）';
+      document.getElementById('m-signals').innerHTML =
+        (p.key_signals || []).map(s => `<div class="modal-signal">${s}</div>`).join('');
+      const link = document.getElementById('m-link');
+      if (p.url) { link.href = p.url; link.style.display = ''; }
+      else { link.style.display = 'none'; }
+      document.getElementById('post-modal').classList.add('show');
+    }
+    function closeModal() {
+      document.getElementById('post-modal').classList.remove('show');
+    }
+    document.getElementById('post-modal').addEventListener('click', e => {
+      if (e.target.id === 'post-modal') closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+</body>
+</html>

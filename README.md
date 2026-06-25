@@ -90,6 +90,60 @@ cd frontend && python -m http.server 8765
 # http://localhost:8765/dashboard.html
 ```
 
+## 🚀 部署
+
+### Vercel（推荐，30 分钟上线）
+
+```bash
+# 1. 推到 GitHub
+git init && git add . && git commit -m "init"
+# 在 github.com 新建 repo, push 上去
+
+# 2. 在 vercel.com 点 "New Project" → 选你的 repo → Deploy
+# 3. 完成后会给你一个域名: https://mom-index-xxx.vercel.app
+```
+
+免费额度：每月 100GB 流量 + 100 万次 API 调用，个人项目完全够用。
+
+### 腾讯云轻量（国内访问快）
+
+参见上方"快速开始"——把同样的命令搬到服务器上即可，记得用 systemd 跑 `api_server.py` 作为常驻进程。
+
+### GitHub Pages（纯静态，⚠️ 无 API）
+
+如果只要看板不需要动态查询：
+```bash
+git checkout --orphan gh-pages
+git push origin gh-pages
+# 开启 Pages 即可
+```
+
+## 📊 当前覆盖的 11 个板块
+
+| 板块 | 类型 | 代码 | ETF |
+|------|------|------|-----|
+| 纳斯达克 | A 股 ETF | sh513100 | 513100 |
+| 黄金 | A 股 ETF | sh518880 | 518880 |
+| CPO通信 | A 股 ETF | sh515880 | 515880 |
+| 半导体 | A 股 ETF | sh512480 | 512480 |
+| 中韩半导体 | A 股 ETF | sh513310 | 513310 |
+| 小米集团 | 港股 | hk01810 | 01810 |
+| 腾讯控股 | 港股 | hk00700 | 00700 |
+| 美团 | 港股 | hk03690 | 03690 |
+| 恒生科技 | A 股 ETF | sh513130 | 513130 |
+| 中证红利 | A 股指数 | of000922 | 000922 |
+| 美光科技 | 美股 | usMU | MU |
+
+## 🔍 动态查询任意股票
+
+访问 `/query.html`，输入任意股票代码：
+- `513310` / `sh513310` → A 股
+- `00700` / `hk00700` → 港股
+- `MU` / `usMU` → 美股
+- `300750` → 自动识别为 A 股
+
+系统会**实时**抓取股吧帖子 + LLM 分析 + 算情绪指数，无需预配置。
+
 ## 数据源
 
 | 数据源 | 状态 | 日采集量 | 说明 |
