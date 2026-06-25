@@ -1821,6 +1821,9 @@ async function refreshSectorPost(sectorKey, btn) {
       sec.top_newbie_posts = posts.slice(0, 5);
       window.__dashboardData.latest.sectors[sectorKey] = sec;
     }
+    // 同步刷新底部"今日最'小白'的帖子"列表（保留当前筛选）
+    const currentFilter = document.getElementById('sector-filter').value;
+    renderTopPosts(window.__dashboardData, currentFilter);
   } catch (e) {
     console.error(`[refresh] ${sectorKey} 失败:`, e);
     if (container) {
@@ -1889,6 +1892,10 @@ async function refreshAllSectors() {
     // 间隔 800ms，避免后端 / 股吧反爬触发
     await new Promise(r => setTimeout(r, 800));
   }
+
+  // 全部刷新后同步更新底部"今日最'小白'的帖子"列表
+  const currentFilter = document.getElementById('sector-filter').value;
+  renderTopPosts(window.__dashboardData, currentFilter);
 
   const dur = ((Date.now() - t0) / 1000).toFixed(1);
   progress.textContent = `✓ ${ok} 成功 · ✗ ${fail} 失败 · ${dur}s`;
