@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 数据文件（可选 — 如果要跟踪数据则删除下面几行）
+# data/*.json
+# frontend/data/*.json
+
+# 环境
+.env
+.venv/
+venv/
+
+# 系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Chrome profiles (Playwright)
+*.pw_profile/
