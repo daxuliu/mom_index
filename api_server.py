@@ -7,7 +7,10 @@
 """
 import json
 import os
+import re
 import sys
+import time
+import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -379,6 +382,79 @@ def query_stock(raw_code: str) -> dict:
 
 
 # ==================== HTTP 处理器 ====================
+# ==================== ETF T-1 净值缓存 ====================
+# 净值每个交易日 21:00 左右更新一次，缓存 4 小时足够
+__etf_nav_cache: dict = {}
+__ETF_NAV_TTL = 4 * 3600  # 4 小时
+
+# 跨境 ETF 完整列表（20 只，纳指12+标普4+日经4）
+ETF_LIST = [
+    ('513100', 'sh', 'NASDAQ100', '纳指ETF国泰'),
+    ('513300', 'sh', 'NASDAQ100', '纳指ETF华夏'),
+    ('513110', 'sh', 'NASDAQ100', '纳指ETF华泰柏瑞'),
+    ('513390', 'sh', 'NASDAQ100', '纳指ETF博时'),
+    ('513870', 'sh', 'NASDAQ100', '纳指ETF富国'),
+    ('159941', 'sz', 'NASDAQ100', '纳指ETF广发'),
+    ('159632', 'sz', 'NASDAQ100', '纳指ETF华安'),
+    ('159660', 'sz', 'NASDAQ100', '纳指ETF汇添富'),
+    ('159659', 'sz', 'NASDAQ100', '纳指ETF招商'),
+    ('159696', 'sz', 'NASDAQ100', '纳指ETF易方达'),
+    ('159501', 'sz', 'NASDAQ100', '纳指ETF嘉实'),
+    ('159513', 'sz', 'NASDAQ100', '纳指ETF大成'),
+    ('513500', 'sh', 'SP500',     '标普500ETF博时'),
+    ('513650', 'sh', 'SP500',     '标普500ETF南方'),
+    ('159612', 'sz', 'SP500',     '标普500ETF国泰'),
+    ('159655', 'sz', 'SP500',     '标普500ETF华夏'),
+    ('513520', 'sh', 'NIKKEI225', '日经225ETF华夏'),
+    ('513000', 'sh', 'NIKKEI225', '日经225ETF易方达'),
+    ('513880', 'sh', 'NIKKEI225', '日经225ETF华安'),
+    ('159866', 'sz', 'NIKKEI225', '日经225ETF工银'),
+]
+
+
+def fetch_t1_nav(code: str) -> dict:
+    """
+    从东方财富 pingzhongdata 接口获取 T-1 净值
+    返回: {"nav": float, "date": "YYYY-MM-DD", "source": "eastmoney"}
+    """
+    if code in __etf_nav_cache:
+        cached = __etf_nav_cache[code]
+        if time.time() - cached['_ts'] < __ETF_NAV_TTL:
+            return cached
+    try:
+        url = f"http://fund.eastmoney.com/pingzhongdata/{code}.js"
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0",
+            "Referer": "http://fund.eastmoney.com/"
+        })
+        resp = urllib.request.urlopen(req, timeout=10)
+        text = resp.read().decode('utf-8')
+        # 提取 NetWorthTrend 数组的最后一项的 y 值（T-1 净值）
+        # 格式: {"x":1750780800000,"y":1.988,"equityReturn":0.52,"unitMoney":""}
+        matches = re.findall(
+            r'\{"x":(\d+),"y":([\d.]+),"equityReturn":[\d.]+,"unitMoney":""\}',
+            text
+        )
+        if not matches:
+            return {"nav": None, "date": None, "source": "eastmoney", "error": "no data"}
+        # 最后一项 = 最新（通常是 T-1 净值）
+        latest_ts_ms = int(matches[-1][0])
+        latest_nav = float(matches[-1][1])
+        # 时间戳转日期
+        import datetime
+        date_str = datetime.datetime.fromtimestamp(latest_ts_ms / 1000).strftime("%Y-%m-%d")
+        result = {
+            "nav": latest_nav,
+            "date": date_str,
+            "source": "eastmoney",
+            "_ts": time.time(),
+        }
+        __etf_nav_cache[code] = result
+        return result
+    except Exception as e:
+        return {"nav": None, "date": None, "source": "eastmoney", "error": str(e)}
+
+
 class QueryHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         # 简化日志
@@ -471,6 +547,34 @@ class QueryHandler(BaseHTTPRequestHandler):
                 from history_store import list_sectors
                 sectors = list_sectors()
                 self._send_json({"sectors": sectors})
+            except Exception as e:
+                self._send_json({"error": str(e)}, 500)
+            return
+
+        # ETF T-1 净值（用于跨境 ETF 溢价监控）
+        # GET /api/etf-nav             → 返回所有 21 只 ETF 的 T-1 NAV
+        # GET /api/etf-nav?code=513100 → 返回单只
+        if path == "/api/etf-nav":
+            single_code = params.get("code", [None])[0]
+            try:
+                if single_code:
+                    nav = fetch_t1_nav(single_code)
+                    self._send_json({"code": single_code, **nav})
+                else:
+                    navs = {}
+                    for code, _, idx, name in ETF_LIST:
+                        n = fetch_t1_nav(code)
+                        navs[code] = {
+                            "nav": n.get("nav"),
+                            "date": n.get("date"),
+                            "name": name,
+                            "index": idx,
+                        }
+                    self._send_json({
+                        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+                        "count": len(navs),
+                        "navs": navs,
+                    })
             except Exception as e:
                 self._send_json({"error": str(e)}, 500)
             return
