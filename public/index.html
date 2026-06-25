@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>动态股票查询 · 宝妈指数</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./config.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -294,7 +295,7 @@
       }, 600);
 
       try {
-        const resp = await fetch(`/api/query?code=${encodeURIComponent(code)}`);
+        const resp = await fetch(`${window.API_BASE}/api/query?code=${encodeURIComponent(code)}`);
         const data = await resp.json();
         if (data.error) throw new Error(data.error);
 
