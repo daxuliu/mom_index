@@ -489,8 +489,12 @@ class QueryHandler(BaseHTTPRequestHandler):
         path = parsed.path
         params = parse_qs(parsed.query)
 
-        # 根路径 → query.html
-        if path in ("/", "/index.html", "/query.html"):
+        # 根路径 → dashboard.html（默认入口）
+        if path in ("/", "/index.html"):
+            self._send_file(os.path.join(os.path.dirname(__file__), "frontend", "dashboard.html"))
+            return
+        # 兼容：直接访问 /query.html
+        if path == "/query.html":
             self._send_file(os.path.join(os.path.dirname(__file__), "frontend", "query.html"))
             return
 
