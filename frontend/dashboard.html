@@ -338,8 +338,120 @@ body {
 .card-top-post:hover {
   background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(239,68,68,0.12));
   border-color: rgba(245,158,11,0.5);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+/* card-top-post 内的刷新按钮（绝对定位右上角） */
+.card-top-post-refresh {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid #334155;
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 2;
+}
+.card-top-post-refresh:hover {
+  background: rgba(6, 182, 212, 0.25);
+  color: #06b6d4;
+  border-color: #06b6d4;
+  transform: scale(1.1);
+}
+.card-top-post-refresh.refreshing {
+  animation: rotateRefresh 1s linear infinite;
+  color: #06b6d4;
+  border-color: #06b6d4;
+}
+@keyframes rotateRefresh {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+/* card-top-post 加载占位（拉取中） */
+.card-top-post-loading {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px dashed #475569;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 12px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 80px;
+}
+.card-top-post-loading .spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #334155;
+  border-top-color: #06b6d4;
+  border-radius: 50%;
+  animation: rotateRefresh 0.8s linear infinite;
+}
+/* "刷新全部" 顶部按钮 */
+.refresh-all-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 12px 0;
+  padding: 0 4px;
+}
+.refresh-all-bar .title {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+.refresh-all-bar .desc {
+  font-size: 12px;
+  color: #64748b;
+}
+.refresh-all-btn {
+  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.refresh-all-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+.refresh-all-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.refresh-all-btn .icon {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+.refresh-all-btn.refreshing .icon {
+  animation: rotateRefresh 1s linear infinite;
+}
+.refresh-all-progress {
+  font-size: 12px;
+  color: #94a3b8;
+  font-family: "JetBrains Mono", monospace;
 }
 .card-top-post-empty {
   background: rgba(51,65,85,0.2);
@@ -378,9 +490,20 @@ body {
 .card-post-hint {
   margin-top: 6px; font-size: 10px; color: #64748b;
   text-align: right;
+  border-top: 1px dashed rgba(148,163,184,0.15);
+  padding-top: 4px;
 }
 .card-post-empty {
   font-size: 11px; color: #64748b; padding: 4px 0;
+}
+.card-post-fresh {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .card-mini-chart {
@@ -538,6 +661,18 @@ body {
   </div>
 
   <!-- 板块指数卡片 -->
+  <div class="refresh-all-bar">
+    <div>
+      <div class="title">📊 11 板块实时情绪指数</div>
+      <div class="desc">点击 card 内 <span style="color:#06b6d4">🔄</span> 按钮可单独刷新该板块的代表性小白帖</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="refresh-all-progress" id="refresh-all-progress"></span>
+      <button class="refresh-all-btn" id="refresh-all-btn" onclick="refreshAllSectors()">
+        <span class="icon">🔄</span><span class="text">刷新全部帖子</span>
+      </button>
+    </div>
+  </div>
   <div class="cards" id="cards"></div>
 
   <!-- 图例 -->
@@ -743,16 +878,18 @@ function renderCards(data) {
         </div>
         ${topPost ? `
         <!-- 代表性小白帖 -->
-        <div class="card-top-post" onclick='openModal(${JSON.stringify(topPost).replace(/'/g, "&#39;")})' title="点击查看帖子详情">
+        <div class="card-top-post" id="toppost-${key}" onclick='openModal(${JSON.stringify(topPost).replace(/'/g, "&#39;")})' title="点击查看帖子详情">
+          <button class="card-top-post-refresh" id="refresh-btn-${key}" onclick="event.stopPropagation(); refreshSectorPost('${key}', this)" title="实时抓取该板块最新帖子">🔄</button>
           <div class="card-post-head">
             <span class="post-badge ${postBadgeCls}">${postBadgeTxt} ${topPost.score}分</span>
             ${topPost.intent_label ? `<span class="post-intent">${topPost.intent_label}</span>` : ''}
           </div>
           <div class="card-post-title">${topPost.title || topPost.full_title || '（无标题）'}</div>
           ${topPost.reasoning ? `<div class="card-post-reason">${topPost.reasoning}</div>` : ''}
-          <div class="card-post-hint">🔍 点击查看完整帖子</div>
+          <div class="card-post-hint">🔍 点击查看完整帖子 · 右上角 🔄 实时刷新</div>
         </div>` : `
-        <div class="card-top-post card-top-post-empty">
+        <div class="card-top-post card-top-post-empty" id="toppost-${key}">
+          <button class="card-top-post-refresh" id="refresh-btn-${key}" onclick="event.stopPropagation(); refreshSectorPost('${key}', this)" title="实时抓取该板块最新帖子">🔄</button>
           <div class="card-post-empty">📭 今日暂无典型小白帖</div>
         </div>`}
         <div class="card-mini-chart" id="mini-${key}" onclick="openSectorChart('${key}')">
@@ -1564,6 +1701,249 @@ function renderSearchResult(sectorKey) {
       });
     }
   }
+}
+
+// ============ 帖子实时刷新（复用 /api/query 端点） ============
+// 标记正在刷新的板块，避免重复点击
+const __refreshingSectors = new Set();
+// 每个板块最后刷新时间（节流：>= 8s 才允许再刷）
+const __lastRefreshAt = {};
+// 缓存当前 sector 数据（用 key 取实时股票代码）
+window.__sectorQuoteCodes = window.__sectorQuoteCodes || {
+  nasdaq: 'sh513100', gold: 'sh518880', cpo: 'sh515880', semiconductor: 'sh512480',
+  cnkr_semi: 'sh513310', xiaomi: 'hk01810', tencent: 'hk00700', meituan: 'hk03690',
+  hangseng_tech: 'sh513130', dividend: 'of000922', micron: 'usMU',
+};
+
+// 把 code 转换成 /api/query 能识别的格式（去前缀）
+function normalizeCode(code) {
+  if (!code) return '';
+  // sh/sz 开头 → 取后 6 位（A 股）
+  if (/^(sh|sz|bj)/.test(code)) return code.slice(2);
+  // hk 开头 → hk + 后 5 位（去前导 0，港股代码）
+  if (/^hk/.test(code)) {
+    const num = code.slice(2).replace(/^0+/, '') || '0';
+    return 'hk' + num.padStart(5, '0');
+  }
+  // us 开头 → us + 代码（美股）
+  if (/^us/.test(code)) return code.slice(2);
+  // of 开头 → 取后 6 位（指数/场外）
+  if (/^of/.test(code)) return code.slice(2);
+  return code;
+}
+
+// 渲染单卡片 post（共用）
+function renderSectorTopPost(sectorKey, post) {
+  const container = document.getElementById(`toppost-${sectorKey}`);
+  if (!container) return;
+  if (!post) {
+    container.classList.add('card-top-post-empty');
+    container.innerHTML = `
+      <button class="card-top-post-refresh" onclick="event.stopPropagation(); refreshSectorPost('${sectorKey}', this)" title="实时抓取该板块最新帖子">🔄</button>
+      <div class="card-post-empty">📭 暂无典型小白帖</div>`;
+    return;
+  }
+  container.classList.remove('card-top-post-empty');
+  const badgeCls = post.score >= 50 ? 'pure' : 'semi';
+  const badgeTxt = post.score >= 50 ? '纯小白' : '偏小白';
+  const postJson = JSON.stringify(post).replace(/'/g, "&#39;");
+  container.innerHTML = `
+    <button class="card-top-post-refresh" id="refresh-btn-${sectorKey}" onclick="event.stopPropagation(); refreshSectorPost('${sectorKey}', this)" title="实时抓取该板块最新帖子">🔄</button>
+    <div class="card-post-head">
+      <span class="post-badge ${badgeCls}">${badgeTxt} ${post.score}分</span>
+      ${post.intent_label ? `<span class="post-intent">${post.intent_label}</span>` : ''}
+      <span class="card-post-fresh">✨ 实时</span>
+    </div>
+    <div class="card-post-title">${post.title || post.full_title || '（无标题）'}</div>
+    ${post.reasoning ? `<div class="card-post-reason">${post.reasoning}</div>` : ''}
+    <div class="card-post-hint">🔍 点击查看完整帖子 · 右上角 🔄 实时刷新</div>`;
+  // 重新绑定 openModal（onclick 用属性注入）
+  container.onclick = () => openModal(post);
+}
+
+// 单独刷新某个板块
+async function refreshSectorPost(sectorKey, btn) {
+  if (__refreshingSectors.has(sectorKey)) {
+    console.log(`[refresh] ${sectorKey} 正在刷新中，跳过`);
+    return;
+  }
+  // 节流：8 秒内不重复刷
+  const now = Date.now();
+  if (__lastRefreshAt[sectorKey] && (now - __lastRefreshAt[sectorKey]) < 8000) {
+    const remain = Math.ceil((8000 - (now - __lastRefreshAt[sectorKey])) / 1000);
+    showToast(`⏳ ${remain}s 后可再次刷新`, 'warn');
+    return;
+  }
+
+  const code = window.__sectorQuoteCodes[sectorKey];
+  if (!code) {
+    showToast(`❌ ${sectorKey} 没有配置股票代码`, 'error');
+    return;
+  }
+
+  __refreshingSectors.add(sectorKey);
+  __lastRefreshAt[sectorKey] = now;
+
+  // 显示 loading
+  const container = document.getElementById(`toppost-${sectorKey}`);
+  if (container) {
+    container.onclick = null;
+    container.classList.remove('card-top-post-empty');
+    container.innerHTML = `
+      <div class="card-top-post-loading">
+        <div class="spinner"></div>
+        <span>实时抓取 ${SECTOR_NAMES[sectorKey] || sectorKey} 最新帖子…</span>
+      </div>`;
+  }
+  if (btn) btn.classList.add('refreshing');
+
+  try {
+    const url = `/api/query?code=${encodeURIComponent(normalizeCode(code))}`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+
+    if (data.error) throw new Error(data.error);
+
+    const posts = data.sample_posts || [];
+    if (!posts.length) {
+      throw new Error('该股票暂无典型小白帖');
+    }
+
+    // 取最高分帖子
+    const topPost = posts[0];
+    renderSectorTopPost(sectorKey, topPost);
+    showToast(`✅ ${SECTOR_NAMES[sectorKey] || sectorKey} 已更新`, 'ok');
+
+    // 同步更新 window.__dashboardData.latest.sectors[key].top_newbie_posts
+    if (window.__dashboardData && window.__dashboardData.latest && window.__dashboardData.latest.sectors) {
+      const sec = window.__dashboardData.latest.sectors[sectorKey] || {};
+      sec.top_newbie_posts = posts.slice(0, 5);
+      window.__dashboardData.latest.sectors[sectorKey] = sec;
+    }
+  } catch (e) {
+    console.error(`[refresh] ${sectorKey} 失败:`, e);
+    if (container) {
+      // 恢复原状（用回原始数据）
+      const data = window.__dashboardData;
+      const sector = (data && data.latest && data.latest.sectors && data.latest.sectors[sectorKey]) || {};
+      const oldPosts = (sector.details && sector.details.top_newbie_posts) || sector.top_newbie_posts || [];
+      const oldTop = oldPosts[0];
+      if (oldTop) {
+        renderSectorTopPost(sectorKey, oldTop);
+      } else {
+        renderSectorTopPost(sectorKey, null);
+      }
+    }
+    showToast(`❌ 刷新失败: ${e.message || e}`, 'error');
+  } finally {
+    __refreshingSectors.delete(sectorKey);
+    if (btn) btn.classList.remove('refreshing');
+  }
+}
+
+// 批量刷新全部板块（串行，避免后端压力大）
+async function refreshAllSectors() {
+  const btn = document.getElementById('refresh-all-btn');
+  const progress = document.getElementById('refresh-all-progress');
+  if (!btn || btn.disabled) return;
+
+  if (btn.classList.contains('refreshing')) {
+    showToast('⏳ 正在刷新中…', 'warn');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('refreshing');
+  const oldText = btn.querySelector('.text').textContent;
+  btn.querySelector('.text').textContent = '正在抓取...';
+
+  const sectorKeys = Object.keys(window.__sectorQuoteCodes);
+  let ok = 0, fail = 0;
+  const t0 = Date.now();
+
+  for (let i = 0; i < sectorKeys.length; i++) {
+    const key = sectorKeys[i];
+    progress.textContent = `${i + 1}/${sectorKeys.length} (${ok}✓ ${fail}✗)`;
+    try {
+      // 直接调用 fetch 逻辑（不走 UI 节流）
+      const code = window.__sectorQuoteCodes[key];
+      const resp = await fetch(`/api/query?code=${encodeURIComponent(normalizeCode(code))}`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const data = await resp.json();
+      if (data.error) throw new Error(data.error);
+      const posts = data.sample_posts || [];
+      if (!posts.length) throw new Error('无数据');
+      renderSectorTopPost(key, posts[0]);
+      // 同步数据
+      if (window.__dashboardData && window.__dashboardData.latest && window.__dashboardData.latest.sectors) {
+        const sec = window.__dashboardData.latest.sectors[key] || {};
+        sec.top_newbie_posts = posts.slice(0, 5);
+        window.__dashboardData.latest.sectors[key] = sec;
+      }
+      ok++;
+    } catch (e) {
+      console.warn(`[refreshAll] ${key} 失败:`, e);
+      fail++;
+    }
+    // 间隔 800ms，避免后端 / 股吧反爬触发
+    await new Promise(r => setTimeout(r, 800));
+  }
+
+  const dur = ((Date.now() - t0) / 1000).toFixed(1);
+  progress.textContent = `✓ ${ok} 成功 · ✗ ${fail} 失败 · ${dur}s`;
+  btn.disabled = false;
+  btn.classList.remove('refreshing');
+  btn.querySelector('.text').textContent = oldText;
+
+  if (fail === 0) {
+    showToast(`✅ 全部 11 个板块已实时更新（${dur}s）`, 'ok');
+  } else {
+    showToast(`⚠️ ${ok} 成功 ${fail} 失败（${dur}s）`, 'warn');
+  }
+
+  // 3s 后清空进度
+  setTimeout(() => { progress.textContent = ''; }, 3000);
+}
+
+// 简易 toast 提示
+function showToast(msg, type = 'ok') {
+  // 移除已存在的
+  const old = document.getElementById('__toast');
+  if (old) old.remove();
+  const colors = {
+    ok: 'linear-gradient(90deg, #22c55e, #10b981)',
+    warn: 'linear-gradient(90deg, #f59e0b, #ef4444)',
+    error: 'linear-gradient(90deg, #ef4444, #dc2626)',
+  };
+  const div = document.createElement('div');
+  div.id = '__toast';
+  div.textContent = msg;
+  div.style.cssText = `
+    position: fixed; top: 20px; right: 20px; z-index: 9999;
+    background: ${colors[type] || colors.ok};
+    color: white; padding: 10px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    animation: toastSlideIn 0.3s ease-out;
+  `;
+  // 注入动画
+  if (!document.getElementById('__toast_style')) {
+    const s = document.createElement('style');
+    s.id = '__toast_style';
+    s.textContent = `@keyframes toastSlideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }`;
+    document.head.appendChild(s);
+  }
+  document.body.appendChild(div);
+  setTimeout(() => {
+    div.style.transition = 'opacity 0.3s, transform 0.3s';
+    div.style.opacity = '0';
+    div.style.transform = 'translateX(100%)';
+    setTimeout(() => div.remove(), 300);
+  }, 2500);
 }
 
 function jumpToSector(sectorKey) {
