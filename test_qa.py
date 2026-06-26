@@ -109,10 +109,11 @@ mock_latest = {
 ctx2 = build_context(mock_latest, ["nasdaq", "cpo"], lambda k, d: [])
 ans = _fallback_answer("现在买纳指合适吗？", ctx2, mock_latest)
 print(ans)
-assert "不构成投资建议" in ans
 assert "纳斯达克" in ans
+# 新版 fallback 应该有操作建议
+assert any(k in ans for k in ["减仓", "止盈", "布局", "定投", "持有"])
+print("  ✅ PASS (含操作建议)")
 print()
-print("  ✅ PASS")
 
 
 # ============================================================
@@ -139,8 +140,14 @@ for line in result["answer"].split("\n"):
     print(f"    {line}")
 print()
 assert result["mode"] in ("llm", "fallback")
-assert "不构成投资建议" in result["answer"], "回答应包含免责声明"
-print("  ✅ PASS")
+# 新版 prompt 不强制要求"不构成投资建议"，改测更宽松的判断
+# 1) 必须有数据支撑（提到 44.2 或 7 天变化）
+has_data = ("44.2" in result["answer"] or "+22.8%" in result["answer"] or "66.7%" in result["answer"])
+# 2) 必须有具体操作建议
+has_action = any(k in result["answer"] for k in ["建仓", "加仓", "减仓", "止盈", "止损", "持有", "观望", "定投", "布局"])
+assert has_data, "回答应包含具体数据"
+assert has_action, "回答应包含具体操作建议"
+print("  ✅ PASS (有数据 + 有操作建议)")
 
 
 # ============================================================

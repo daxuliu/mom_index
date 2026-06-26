@@ -995,6 +995,72 @@ body {
   cursor: pointer;
 }
 .qa-toolbar button:hover { background: #1e293b; color: #e2e8f0; }
+
+/* Markdown 渲染样式（用于 AI 回答） */
+.qa-msg .bubble h2, .qa-msg .bubble h3, .qa-msg .bubble h4 {
+  margin: 14px 0 8px;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+.qa-msg .bubble h2 { font-size: 18px; }
+.qa-msg .bubble h3 { font-size: 16px; }
+.qa-msg .bubble h4 { font-size: 15px; color: #fbbf24; }
+.qa-msg .bubble p { margin: 0 0 10px 0; }
+.qa-msg .bubble ul {
+  margin: 6px 0 10px 0;
+  padding-left: 20px;
+}
+.qa-msg .bubble ul li {
+  list-style: disc;
+  margin: 3px 0;
+  color: #cbd5e1;
+}
+.qa-msg .bubble blockquote {
+  margin: 8px 0;
+  padding: 8px 14px;
+  background: rgba(99, 102, 241, 0.1);
+  border-left: 3px solid #6366f1;
+  color: #c7d2fe;
+  font-style: italic;
+  border-radius: 0 4px 4px 0;
+}
+.qa-msg .bubble code {
+  background: #0f172a;
+  color: #fbbf24;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 13px;
+}
+.qa-msg .bubble .md-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+  background: #0f172a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.qa-msg .bubble .md-table th {
+  background: #1e293b;
+  color: #fbbf24;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid #334155;
+}
+.qa-msg .bubble .md-table td {
+  padding: 6px 12px;
+  color: #cbd5e1;
+  border-bottom: 1px solid #1e293b;
+}
+.qa-msg .bubble .md-table tr:last-child td {
+  border-bottom: none;
+}
+.qa-msg .bubble strong {
+  color: #fbbf24;
+  font-weight: 600;
+}
 </style>
 <!-- Vercel Web Analytics -->
 <script>
@@ -2786,8 +2852,8 @@ function buildQAMessage(msg) {
   avatar.textContent = msg.role === 'user' ? '👤' : '🤖';
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-  // 把 **xxx** 转 <strong>
-  bubble.innerHTML = escapeHtml(msg.text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Markdown 渲染：粗体 / 标题 / 引用 / 列表 / 表格 / 段落
+  bubble.innerHTML = renderMarkdown(msg.text);
   wrap.appendChild(avatar);
   wrap.appendChild(bubble);
   if (msg.meta) {
@@ -2798,6 +2864,75 @@ function buildQAMessage(msg) {
     wrap.appendChild(meta);
   }
   return wrap;
+}
+
+/**
+ * 极简 Markdown 渲染（不依赖第三方库）
+ * 支持: **粗体** / ### 标题 / > 引用 / - 列表 / 表格 / 段落 / 行内代码
+ */
+function renderMarkdown(text) {
+  if (!text) return '';
+  // 先 escape（避免 XSS），然后再替换 markdown 语法
+  let s = escapeHtml(text);
+
+  // 1. 表格（必须在代码块之前处理）
+  s = s.replace(/((?:^\|.+\|\n)+)/gm, (block) => {
+    const lines = block.trim().split('\n');
+    if (lines.length < 2) return block;
+    // 找分隔行 | --- | --- |
+    const sepIdx = lines.findIndex(l => /^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)+\|?$/.test(l));
+    if (sepIdx < 0) return block;
+    const headers = lines[sepIdx - 1].split('|').map(x => x.trim()).filter(Boolean);
+    if (!headers.length) return block;
+    const rows = lines.slice(sepIdx + 1).map(line =>
+      line.split('|').map(x => x.trim()).filter((_, i, arr) => i > 0 && i < arr.length - 1 || (i === 0 && arr[0] !== ''))
+    );
+    let html = '<table class="md-table"><thead><tr>';
+    headers.forEach(h => html += `<th>${h}</th>`);
+    html += '</tr></thead><tbody>';
+    rows.forEach(r => {
+      if (!r.length) return;
+      html += '<tr>';
+      r.forEach(c => html += `<td>${c}</td>`);
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  });
+
+  // 2. 标题 ### / ## / #
+  s = s.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+  s = s.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+  s = s.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+
+  // 3. 引用 > xxx
+  s = s.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // 4. 列表 - xxx（连续的行合并成一个 ul）
+  s = s.replace(/(^- .+(?:\n- .+)*)/gm, (block) => {
+    const items = block.split('\n').map(l => l.replace(/^- /, '').trim());
+    return '<ul>' + items.map(i => `<li>${i}</li>`).join('') + '</ul>';
+  });
+
+  // 5. 粗体 **xxx**（先于 *斜体*）
+  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // 6. 行内代码 `xxx`
+  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // 7. 段落：连续两个换行 = 新段落
+  s = s.split(/\n{2,}/).map(p => {
+    p = p.trim();
+    if (!p) return '';
+    if (p.startsWith('<h') || p.startsWith('<blockquote') || p.startsWith('<ul') ||
+        p.startsWith('<table') || p.startsWith('<code') || p.startsWith('<strong')) {
+      return p;
+    }
+    // 单换行转 <br>
+    return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+
+  return s;
 }
 
 async function sendQA(question) {
