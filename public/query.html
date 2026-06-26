@@ -163,6 +163,31 @@
     .poster-modal canvas { max-width: 100%; height: auto; border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); }
     .poster-modal-actions { display: flex; gap: 10px; width: 100%; justify-content: center; }
 
+    /* ===========================================
+       移动端适配
+       =========================================== */
+    @media (max-width: 768px) {
+      body { font-size: 14px; }
+      .container { padding: 16px 12px !important; }
+      h1 { font-size: 20px !important; }
+      .input-row { flex-direction: column !important; }
+      .input-row button { width: 100% !important; padding: 12px !important; }
+      .input-row input { font-size: 16px !important; width: 100% !important; }  /* 16px 避免 iOS 自动放大 */
+      .quote-bar { flex-direction: column !important; align-items: stretch !important; }
+      .quote-bar-actions { justify-content: stretch !important; }
+      .quote-bar-actions button { flex: 1 !important; }
+      .result-card { padding: 14px !important; }
+      .result-card-title { font-size: 16px !important; }
+      .result-card-index .num { font-size: 28px !important; }
+      .result-stats { grid-template-columns: repeat(2, 1fr) !important; }
+      .modal { max-width: 100% !important; max-height: 100vh !important; border-radius: 12px 12px 0 0 !important; padding: 16px !important; }
+      .poster-modal { padding: 16px !important; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 17px !important; }
+      .result-card-index .num { font-size: 24px !important; }
+    }
+
     /* 实时报价条（query.html 简化版：仅查询后按需加载，无轮询） */
     .quote-bar {
       display: flex; align-items: center; justify-content: space-between; gap: 12px;

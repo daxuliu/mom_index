@@ -600,8 +600,115 @@ body {
 /* 加载状态 */
 .loading { text-align: center; padding: 60px; color: #64748b; }
 
-@media (max-width: 600px) {
-  .card .index-value { font-size: 36px; }
+/* ===========================================
+   移动端适配 (响应式)
+   断点：768px (平板) / 480px (手机)
+   =========================================== */
+
+/* 平板：768px 以下 */
+@media (max-width: 768px) {
+  body { font-size: 14px; }
+  .container { padding: 16px 12px; }
+
+  /* 顶部 header */
+  .header h1 { font-size: 20px !important; }
+
+  /* 板块卡：4 列 → 2 列 */
+  .cards { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+  .card { padding: 14px !important; }
+  .card .index-value { font-size: 32px !important; }
+  .card .sector-name { font-size: 12px !important; }
+  .card .index-label { font-size: 12px !important; }
+
+  /* 散点图容器：让高度自适应 */
+  .scatter-container { padding: 12px !important; }
+  #scatter-plot { width: 100% !important; height: 320px !important; }
+
+  /* 图例：折行 */
+  .legend { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* 股票搜索：栈式 */
+  .stock-search { padding: 14px !important; }
+  .stock-search h3 { font-size: 13px !important; }
+  .search-box { flex-direction: column !important; }
+  .search-box button { padding: 10px 16px !important; }
+
+  /* 分享按钮：折行 */
+  .share-bar { flex-direction: column !important; gap: 8px !important; }
+  .share-bar .share-btn { width: 100% !important; }
+
+  /* P2/P2+ 区块：减小 padding */
+  .p2-section, .qa-section { padding: 16px !important; margin: 16px auto !important; }
+  .p2-section h2, .qa-section h2 { font-size: 17px !important; }
+
+  /* ============ AI 对话框（重点） ============ */
+  .qa-quick-prompts { gap: 6px !important; }
+  .qa-quick-prompt { font-size: 12px !important; padding: 5px 10px !important; }
+  .qa-input-row { flex-direction: column !important; gap: 8px !important; }
+  .qa-input-row input { width: 100% !important; font-size: 16px !important; /* 16px 避免 iOS 自动放大 */ }
+  .qa-input-row button { width: 100% !important; padding: 12px !important; font-size: 15px !important; }
+  .qa-toolbar { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; }
+  .qa-toolbar button { width: 100% !important; }
+  .qa-history { max-height: 500px !important; }
+  .qa-msg .avatar { width: 28px !important; height: 28px !important; font-size: 14px !important; }
+  .qa-msg .bubble { padding: 10px 12px !important; font-size: 14px !important; line-height: 1.7 !important; }
+  .qa-msg .bubble h2 { font-size: 16px !important; }
+  .qa-msg .bubble h3 { font-size: 15px !important; }
+  .qa-msg .bubble h4 { font-size: 14px !important; }
+  .qa-msg .bubble .md-table { font-size: 12px !important; }
+  .qa-msg .bubble .md-table th, .qa-msg .bubble .md-table td { padding: 5px 8px !important; }
+  .qa-msg .meta { font-size: 10px !important; margin-left: 36px !important; }
+
+  /* AI 智能解读区 */
+  .ai-text { font-size: 14px !important; line-height: 1.7 !important; }
+  .ai-meta { font-size: 11px !important; gap: 8px !important; }
+
+  /* 热力图：缩小 + 横滚 */
+  .heatmap-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  .heatmap .hm-cell { width: 48px !important; height: 36px !important; font-size: 10px !important; }
+  .heatmap .hm-label { font-size: 10px !important; }
+  .pairs-list { grid-template-columns: 1fr !important; }
+
+  /* 情绪日历：横滚 + 缩小 */
+  .calendar-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+  .calendar-table th.sector-name { min-width: 90px !important; padding: 4px 8px !important; }
+  .calendar-table td.sector-name { padding: 4px 8px !important; font-size: 11px !important; }
+  .calendar-table .cal-cell { width: 26px !important; height: 24px !important; }
+  .calendar-table .cal-cell .emoji { font-size: 12px !important; }
+  .calendar-table .cal-cell .value { display: none !important; /* 太挤，hover 看 tooltip */ }
+  .calendar-legend { gap: 8px !important; font-size: 11px !important; }
+
+  /* Top 小白帖：列表式 */
+  .top-posts h3 { font-size: 15px !important; }
+  .top-post { padding: 10px !important; }
+  .top-post-title { font-size: 13px !important; }
+  .filter-bar { flex-direction: column !important; align-items: stretch !important; gap: 6px !important; }
+  .filter-controls { justify-content: space-between !important; }
+
+  /* Modal：贴底（全屏） */
+  .modal { max-width: 100% !important; max-height: 100vh !important; border-radius: 12px 12px 0 0 !important; padding: 16px !important; }
+  .chart-modal { max-width: 100% !important; padding: 16px !important; }
+  .poster-modal { padding: 16px !important; }
+}
+
+/* 手机：480px 以下（更激进） */
+@media (max-width: 480px) {
+  .header h1 { font-size: 17px !important; }
+  .cards { grid-template-columns: 1fr !important; }  /* 单列 */
+  .card .index-value { font-size: 28px !important; }
+  #scatter-plot { height: 280px !important; }
+
+  /* AI 对话框：更紧凑 */
+  .qa-section { padding: 12px !important; }
+  .qa-section h2 { font-size: 15px !important; }
+  .qa-section::before { font-size: 10px !important; padding: 2px 8px !important; }
+  .qa-quick-prompt { font-size: 11px !important; padding: 4px 8px !important; }
+  .qa-msg .bubble { font-size: 13px !important; }
+  .qa-msg .bubble .md-table { font-size: 11px !important; }
+
+  /* 移动端隐藏一些次要信息 */
+  .pairs-list { display: none !important; }  /* 联动对列表太挤了 */
+  .heatmap-legend > span:last-child { display: none !important; }  /* 阈值说明隐藏 */
 }
 
 /* ==================== P2: AI 智能解读 ==================== */
