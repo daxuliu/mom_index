@@ -824,12 +824,27 @@ body {
 /* ==================== P2+: AI 投顾问答 ==================== */
 .qa-section {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid #334155;
+  border: 2px solid #6366f1;     /* 加粗 + 高亮边框，最显眼 */
   border-radius: 12px;
   padding: 24px;
   margin: 24px auto;
   max-width: 1280px;
   color: #e2e8f0;
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.15);  /* 发光感 */
+  position: relative;
+}
+.qa-section::before {
+  content: '🤖 推荐';
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 .qa-section h2 {
   font-size: 20px;
@@ -1042,72 +1057,7 @@ body {
     <div id="search-result"></div>
   </div>
 
-  <!-- 板块指数卡片 -->
-  <div class="refresh-all-bar">
-    <div>
-      <div class="title">📊 11 板块实时情绪指数</div>
-      <div class="desc">点击 card 内 <span style="color:#06b6d4">🔄</span> 按钮可单独刷新该板块的代表性小白帖</div>
-    </div>
-    <div style="display:flex; align-items:center; gap:12px;">
-      <span class="refresh-all-progress" id="refresh-all-progress"></span>
-      <button class="refresh-all-btn" id="refresh-all-btn" onclick="refreshAllSectors()">
-        <span class="icon">🔄</span><span class="text">刷新全部帖子</span>
-      </button>
-    </div>
-  </div>
-  <div class="cards" id="cards"></div>
-
-  <!-- 图例 -->
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot nasdaq"></div>纳斯达克</div>
-    <div class="legend-item"><div class="legend-dot gold"></div>黄金</div>
-    <div class="legend-item"><div class="legend-dot cpo"></div>CPO通信</div>
-    <div class="legend-item"><div class="legend-dot semiconductor"></div>半导体</div>
-    <div class="legend-item"><div class="legend-dot cnkr_semi"></div>中韩半导体</div>
-    <div class="legend-item"><div class="legend-dot xiaomi"></div>小米集团</div>
-    <div class="legend-item"><div class="legend-dot tencent"></div>腾讯控股</div>
-    <div class="legend-item"><div class="legend-dot meituan"></div>美团</div>
-    <div class="legend-item"><div class="legend-dot hangseng_tech"></div>恒生科技</div>
-    <div class="legend-item"><div class="legend-dot dividend"></div>中证红利</div>
-    <div class="legend-item"><div class="legend-dot micron"></div>美光科技</div>
-  </div>
-
-  <!-- ==================== P2: AI 智能解读 ==================== -->
-  <section class="p2-section" id="ai-interpret-section">
-    <h2>
-      <span>🤖 AI 智能解读</span>
-      <span class="badge">P2 BETA</span>
-    </h2>
-    <div class="ai-loading" id="ai-interpret-loading">⏳ 正在分析今日市场情绪…</div>
-    <div class="ai-text" id="ai-interpret-text" style="display:none;"></div>
-    <div class="ai-meta" id="ai-interpret-meta" style="display:none;"></div>
-  </section>
-
-  <!-- ==================== P2: 板块联动热力图 ==================== -->
-  <section class="p2-section" id="correlation-section">
-    <h2>
-      <span>🔥 板块联动热力图</span>
-      <span class="badge">22 天数据</span>
-    </h2>
-    <div class="heatmap-wrap" id="correlation-loading">
-      <div class="ai-loading">⏳ 计算板块两两相关性…</div>
-    </div>
-    <div class="heatmap-wrap" id="correlation-content" style="display:none;"></div>
-  </section>
-
-  <!-- ==================== P2: 散户情绪日历 ==================== -->
-  <section class="p2-section" id="calendar-section">
-    <h2>
-      <span>📅 散户情绪日历</span>
-      <span class="badge">最近 30 天</span>
-    </h2>
-    <div class="calendar-wrap" id="calendar-loading">
-      <div class="ai-loading">⏳ 加载情绪日历…</div>
-    </div>
-    <div class="calendar-wrap" id="calendar-content" style="display:none;"></div>
-  </section>
-
-  <!-- ==================== P2+: AI 投顾问答 ==================== -->
+  <!-- ==================== P2+: AI 投顾问答（首页最显眼位置 - 搜索框下方） ==================== -->
   <section class="qa-section" id="qa-section">
     <h2>
       <span>💬 AI 投顾问答</span>
@@ -1148,6 +1098,73 @@ body {
       </div>
     </div>
   </section>
+
+  <!-- 板块指数卡片 -->
+  <div class="refresh-all-bar">
+    <div>
+      <div class="title">📊 11 板块实时情绪指数</div>
+      <div class="desc">点击 card 内 <span style="color:#06b6d4">🔄</span> 按钮可单独刷新该板块的代表性小白帖</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="refresh-all-progress" id="refresh-all-progress"></span>
+      <button class="refresh-all-btn" id="refresh-all-btn" onclick="refreshAllSectors()">
+        <span class="icon">🔄</span><span class="text">刷新全部帖子</span>
+      </button>
+    </div>
+  </div>
+  <div class="cards" id="cards"></div>
+
+  <!-- 图例 -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot nasdaq"></div>纳斯达克</div>
+    <div class="legend-item"><div class="legend-dot gold"></div>黄金</div>
+    <div class="legend-item"><div class="legend-dot cpo"></div>CPO通信</div>
+    <div class="legend-item"><div class="legend-dot semiconductor"></div>半导体</div>
+    <div class="legend-item"><div class="legend-dot cnkr_semi"></div>中韩半导体</div>
+    <div class="legend-item"><div class="legend-dot xiaomi"></div>小米集团</div>
+    <div class="legend-item"><div class="legend-dot tencent"></div>腾讯控股</div>
+    <div class="legend-item"><div class="legend-dot meituan"></div>美团</div>
+    <div class="legend-item"><div class="legend-dot hangseng_tech"></div>恒生科技</div>
+    <div class="legend-item"><div class="legend-dot dividend"></div>中证红利</div>
+    <div class="legend-item"><div class="legend-dot micron"></div>美光科技</div>
+  </div>
+
+  <!-- ==================== P2: AI 智能解读（板块卡之后 - 顺势总结） ==================== -->
+  <section class="p2-section" id="ai-interpret-section">
+    <h2>
+      <span>🤖 AI 智能解读</span>
+      <span class="badge">P2 BETA</span>
+    </h2>
+    <div class="ai-loading" id="ai-interpret-loading">⏳ 正在分析今日市场情绪…</div>
+    <div class="ai-text" id="ai-interpret-text" style="display:none;"></div>
+    <div class="ai-meta" id="ai-interpret-meta" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2: 板块联动热力图 ==================== -->
+  <section class="p2-section" id="correlation-section">
+    <h2>
+      <span>🔥 板块联动热力图</span>
+      <span class="badge">22 天数据</span>
+    </h2>
+    <div class="heatmap-wrap" id="correlation-loading">
+      <div class="ai-loading">⏳ 计算板块两两相关性…</div>
+    </div>
+    <div class="heatmap-wrap" id="correlation-content" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2: 散户情绪日历 ==================== -->
+  <section class="p2-section" id="calendar-section">
+    <h2>
+      <span>📅 散户情绪日历</span>
+      <span class="badge">最近 30 天</span>
+    </h2>
+    <div class="calendar-wrap" id="calendar-loading">
+      <div class="ai-loading">⏳ 加载情绪日历…</div>
+    </div>
+    <div class="calendar-wrap" id="calendar-content" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2+: AI 投顾问答（已移到搜索框下方） ==================== -->
 
   <!-- Top 小白帖 -->
   <div class="top-posts" id="top-posts">
