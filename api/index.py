@@ -128,6 +128,56 @@ def health():
     return jsonify({"status": "ok", "platform": "vercel"})
 
 
+@app.route("/api/interpret")
+def api_interpret():
+    """
+    LLM 今日市场情绪解读（基于指数 + 代表性小白帖）。
+    无 key 时自动降级到规则版。
+    """
+    try:
+        from analyzer.interpret_generator import generate_interpret
+        from analyzer.index_calculator import (
+            get_dashboard_data, SECTOR_NAMES,
+        )
+
+        date_str = request.args.get("date", "").strip() or None
+        dashboard = get_dashboard_data()
+        if not dashboard.get("latest") and not dashboard.get("history"):
+            return jsonify({"error": "无数据"}), 404
+
+        rec = None
+        if date_str and dashboard.get("history"):
+            rec = next((r for r in dashboard["history"] if r.get("date") == date_str), None)
+        if not rec:
+            rec = dashboard.get("latest")
+        if not rec:
+            return jsonify({"error": f"未找到 {date_str} 的数据"}), 404
+
+        sector_indices = {"date": rec.get("date"), "sectors": {}}
+        top_posts = {}
+        for key, sec in (rec.get("sectors") or {}).items():
+            if not isinstance(sec, dict):
+                continue
+            sector_indices["sectors"][key] = {
+                "name": SECTOR_NAMES.get(key, key),
+                "index": sec.get("index", 0),
+                "interpretation": sec.get("interpretation", ""),
+                "details": sec.get("details", {}),
+            }
+            top_posts[key] = sec.get("top_newbie_posts", [])[:3]
+
+        result = generate_interpret(sector_indices, top_posts)
+        return jsonify({
+            "date": sector_indices["date"],
+            "interpret": result["interpret"],
+            "mode": result["mode"],
+            "latency_ms": result.get("latency_ms", 0),
+            "tokens": result.get("tokens", 0),
+        })
+    except Exception as e:
+        return jsonify({"error": f"服务器错误: {str(e)[:200]}"}), 500
+
+
 # ==================== 静态文件 (public/) ====================
 STATIC_DIR = os.path.join(ROOT, "public")
 

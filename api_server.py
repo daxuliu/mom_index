@@ -511,6 +511,48 @@ class QueryHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": f"服务器错误: {e}"}, 500)
             return
 
+        # /api/interpret — LLM 今日市场解读
+        if path == "/api/interpret":
+            try:
+                from analyzer.interpret_generator import generate_interpret
+                from analyzer.index_calculator import (
+                    get_dashboard_data, SECTOR_NAMES,
+                )
+                date_str = params.get("date", [None])[0]
+                # 默认用最新数据
+                dashboard = get_dashboard_data()
+                if date_str and dashboard.get("history"):
+                    rec = next((r for r in dashboard["history"] if r.get("date") == date_str), None)
+                else:
+                    rec = dashboard.get("latest")
+                if not rec:
+                    self._send_json({"error": "无可用数据"}, 404)
+                    return
+                # 整理 sector_indices
+                sector_indices = {"date": rec.get("date"), "sectors": {}}
+                top_posts = {}
+                for key, sec in (rec.get("sectors") or {}).items():
+                    if not isinstance(sec, dict):
+                        continue
+                    sector_indices["sectors"][key] = {
+                        "name": SECTOR_NAMES.get(key, key),
+                        "index": sec.get("index", 0),
+                        "interpretation": sec.get("interpretation", ""),
+                        "details": sec.get("details", {}),
+                    }
+                    top_posts[key] = sec.get("top_newbie_posts", [])[:3]
+                result = generate_interpret(sector_indices, top_posts)
+                self._send_json({
+                    "date": sector_indices["date"],
+                    "interpret": result["interpret"],
+                    "mode": result["mode"],
+                    "latency_ms": result.get("latency_ms", 0),
+                    "tokens": result.get("tokens", 0),
+                })
+            except Exception as e:
+                self._send_json({"error": f"服务器错误: {e}"}, 500)
+            return
+
         # 板块历史（用于看板走势图）
         if path == "/api/history" and "sector" in params:
             sector = params.get("sector", [""])[0]
