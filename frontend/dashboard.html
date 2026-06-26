@@ -603,6 +603,223 @@ body {
 @media (max-width: 600px) {
   .card .index-value { font-size: 36px; }
 }
+
+/* ==================== P2: AI 智能解读 ==================== */
+.p2-section {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px auto;
+  max-width: 1280px;
+  color: #e2e8f0;
+}
+.p2-section h2 {
+  font-size: 20px;
+  margin: 0 0 16px 0;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.p2-section h2 .badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+.p2-section .ai-text {
+  white-space: pre-wrap;
+  line-height: 1.8;
+  font-size: 15px;
+  color: #cbd5e1;
+}
+.p2-section .ai-meta {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #64748b;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.p2-section .ai-meta .mode-llm { color: #10b981; }
+.p2-section .ai-meta .mode-fallback { color: #f59e0b; }
+.p2-section .ai-loading {
+  text-align: center;
+  color: #64748b;
+  padding: 30px 0;
+  font-size: 14px;
+}
+
+/* ==================== P2: 板块联动热力图 ==================== */
+.heatmap-wrap { overflow-x: auto; padding: 8px 0; }
+.heatmap {
+  display: inline-grid;
+  gap: 2px;
+  background: #0f172a;
+  padding: 2px;
+  border-radius: 6px;
+}
+.heatmap .hm-cell {
+  width: 64px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  font-weight: 500;
+  position: relative;
+  cursor: default;
+  transition: transform 0.1s;
+}
+.heatmap .hm-cell:hover { transform: scale(1.15); z-index: 10; }
+.heatmap .hm-label {
+  background: transparent;
+  color: #cbd5e1;
+  font-weight: 600;
+  cursor: default;
+  font-size: 12px;
+}
+.heatmap .hm-corner { background: transparent; }
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+.heatmap-legend .gradient {
+  width: 200px;
+  height: 12px;
+  background: linear-gradient(to right, #dc2626, #f59e0b, #fbbf24, #475569, #60a5fa, #2563eb, #1d4ed8);
+  border-radius: 3px;
+}
+.pairs-list {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 8px;
+}
+.pair-item {
+  background: #1e293b;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  border-left: 3px solid #475569;
+}
+.pair-item.strong { border-left-color: #10b981; }
+.pair-item.medium { border-left-color: #3b82f6; }
+.pair-item.weak   { border-left-color: #64748b; }
+.pair-item .pair-r {
+  display: inline-block;
+  font-family: monospace;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #0f172a;
+  margin-right: 6px;
+  font-weight: bold;
+}
+.pair-item .pair-r.positive { color: #f87171; }
+.pair-item .pair-r.negative { color: #60a5fa; }
+
+/* ==================== P2: 散户情绪日历 ==================== */
+.calendar-wrap { overflow-x: auto; padding: 4px 0; }
+.calendar-table {
+  border-collapse: collapse;
+  font-size: 11px;
+  background: #0f172a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.calendar-table th,
+.calendar-table td {
+  border: 1px solid #1e293b;
+  padding: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+.calendar-table th {
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 500;
+  padding: 6px 8px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.calendar-table th.sector-name {
+  text-align: left;
+  background: #1e293b;
+  color: #e2e8f0;
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 110px;
+  padding: 6px 12px;
+}
+.calendar-table td.sector-name {
+  text-align: left;
+  background: #1e293b;
+  color: #e2e8f0;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  padding: 6px 12px;
+  font-weight: 500;
+  border-right: 2px solid #334155;
+}
+.calendar-table .cal-cell {
+  width: 32px;
+  height: 28px;
+  cursor: default;
+  transition: transform 0.1s;
+}
+.calendar-table .cal-cell:hover { transform: scale(1.3); z-index: 5; }
+.calendar-table .cal-cell .emoji {
+  font-size: 14px;
+  line-height: 1;
+}
+.calendar-table .cal-cell .value {
+  display: block;
+  font-size: 9px;
+  color: #64748b;
+  font-family: monospace;
+}
+.calendar-table .cal-cell.empty {
+  background: #0f172a;
+  color: #334155;
+}
+.calendar-table .cal-cell.hot  { background: #dc2626; }
+.calendar-table .cal-cell.warm { background: #f59e0b; }
+.calendar-table .cal-cell.cool { background: #475569; }
+.calendar-table .cal-cell.cold { background: #1e40af; }
+.calendar-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+.calendar-legend .item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.calendar-legend .item .sw {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+.calendar-legend .item .sw.hot  { background: #dc2626; }
+.calendar-legend .item .sw.warm { background: #f59e0b; }
+.calendar-legend .item .sw.cool { background: #475569; }
+.calendar-legend .item .sw.cold { background: #1e40af; }
+.calendar-legend .item .sw.empty { background: #0f172a; border: 1px solid #334155; }
 </style>
 <!-- Vercel Web Analytics -->
 <script>
@@ -694,6 +911,41 @@ body {
     <div class="legend-item"><div class="legend-dot dividend"></div>中证红利</div>
     <div class="legend-item"><div class="legend-dot micron"></div>美光科技</div>
   </div>
+
+  <!-- ==================== P2: AI 智能解读 ==================== -->
+  <section class="p2-section" id="ai-interpret-section">
+    <h2>
+      <span>🤖 AI 智能解读</span>
+      <span class="badge">P2 BETA</span>
+    </h2>
+    <div class="ai-loading" id="ai-interpret-loading">⏳ 正在分析今日市场情绪…</div>
+    <div class="ai-text" id="ai-interpret-text" style="display:none;"></div>
+    <div class="ai-meta" id="ai-interpret-meta" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2: 板块联动热力图 ==================== -->
+  <section class="p2-section" id="correlation-section">
+    <h2>
+      <span>🔥 板块联动热力图</span>
+      <span class="badge">22 天数据</span>
+    </h2>
+    <div class="heatmap-wrap" id="correlation-loading">
+      <div class="ai-loading">⏳ 计算板块两两相关性…</div>
+    </div>
+    <div class="heatmap-wrap" id="correlation-content" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2: 散户情绪日历 ==================== -->
+  <section class="p2-section" id="calendar-section">
+    <h2>
+      <span>📅 散户情绪日历</span>
+      <span class="badge">最近 30 天</span>
+    </h2>
+    <div class="calendar-wrap" id="calendar-loading">
+      <div class="ai-loading">⏳ 加载情绪日历…</div>
+    </div>
+    <div class="calendar-wrap" id="calendar-content" style="display:none;"></div>
+  </section>
 
   <!-- Top 小白帖 -->
   <div class="top-posts" id="top-posts">
@@ -1559,6 +1811,8 @@ fetch('data/dashboard_data.json')
     // 静默后台拉取 11 板块实时帖子，仅更新底部"今日最'小白'的帖子"列表
     // （解决 dashboard 底部用静态 JSON 数据、看起来和搜索页实时数据不一致的问题）
     __silentRefreshTopList();
+    // P2: 加载 AI 解读 / 联动热力图 / 情绪日历
+    loadP2Features();
     // 进入键搜索
     document.getElementById('stock-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') searchStock();
@@ -1955,6 +2209,273 @@ async function __silentRefreshTopList() {
   const currentFilter = document.getElementById('sector-filter').value;
   renderTopPosts(window.__dashboardData, currentFilter);
   console.log(`[silent-refresh] 完成 ✓${ok} ✗${fail}`);
+}
+
+// ============ P2: AI 解读 + 联动热力图 + 情绪日历 ============
+async function loadP2Features() {
+  console.log('[P2] 开始加载 AI 解读 / 联动热力图 / 情绪日历…');
+  // 三个独立加载（一个失败不影响其他）
+  loadAIInterpret();
+  loadCorrelation();
+  loadCalendar();
+}
+
+async function loadAIInterpret() {
+  const loading = document.getElementById('ai-interpret-loading');
+  const textEl = document.getElementById('ai-interpret-text');
+  const metaEl = document.getElementById('ai-interpret-meta');
+  try {
+    const resp = await fetch('/api/interpret');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    // 简单 markdown 处理：把 **xxx** 转 <strong>
+    const html = escapeHtml(data.interpret || '暂无数据')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    textEl.innerHTML = html;
+    const modeClass = data.mode === 'llm' ? 'mode-llm' : 'mode-fallback';
+    const modeText = data.mode === 'llm' ? '🟢 LLM 实时生成' : '🟡 规则降级（无 key 或调用失败）';
+    const histBadge = data.history_used
+      ? '📈 含历史趋势'
+      : '⚪ 无历史趋势（数据不足 7 天）';
+    metaEl.innerHTML = `
+      <span class="${modeClass}">${modeText}</span>
+      <span>${histBadge}</span>
+      <span>⏱️ ${data.latency_ms || 0} ms</span>
+      <span>📊 ${data.tokens || 0} tokens</span>
+      <span>📅 ${data.date || ''}</span>
+    `;
+    loading.style.display = 'none';
+    textEl.style.display = 'block';
+    metaEl.style.display = 'flex';
+    // 上报 Vercel Analytics
+    if (window.va) window.va('track', 'p2_ai_interpret', {
+      mode: data.mode, history_used: data.history_used,
+    });
+  } catch (e) {
+    console.warn('[P2] AI 解读加载失败:', e);
+    loading.innerHTML = `❌ AI 解读加载失败：${escapeHtml(e.message)}`;
+  }
+}
+
+async function loadCorrelation() {
+  const loading = document.getElementById('correlation-loading');
+  const content = document.getElementById('correlation-content');
+  try {
+    const resp = await fetch('/api/correlation?days=30');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.sectors_used) {
+      loading.innerHTML = '⚠️ 历史数据不足 7 天，无法计算相关性。';
+      return;
+    }
+    renderCorrelation(data);
+    loading.style.display = 'none';
+    content.style.display = 'block';
+    if (window.va) window.va('track', 'p2_correlation', { sectors: data.sectors_used });
+  } catch (e) {
+    console.warn('[P2] 热力图加载失败:', e);
+    loading.innerHTML = `❌ 热力图加载失败：${escapeHtml(e.message)}`;
+  }
+}
+
+function renderCorrelation(data) {
+  const content = document.getElementById('correlation-content');
+  const n = data.sectors_used;
+  const labels = data.names;
+  const matrix = data.matrix;
+
+  // 1. 热力图 (N+1) x (N+1) 网格
+  const grid = document.createElement('div');
+  grid.className = 'heatmap';
+  grid.style.gridTemplateColumns = `repeat(${n + 1}, auto)`;
+  grid.style.gridTemplateRows = `repeat(${n + 1}, auto)`;
+
+  // 左上角空
+  const corner = document.createElement('div');
+  corner.className = 'hm-cell hm-corner';
+  grid.appendChild(corner);
+
+  // 列标签
+  labels.forEach(name => {
+    const c = document.createElement('div');
+    c.className = 'hm-cell hm-label';
+    c.textContent = name;
+    grid.appendChild(c);
+  });
+
+  // 行 + 单元格
+  for (let i = 0; i < n; i++) {
+    const rowLabel = document.createElement('div');
+    rowLabel.className = 'hm-cell hm-label';
+    rowLabel.textContent = labels[i];
+    grid.appendChild(rowLabel);
+    for (let j = 0; j < n; j++) {
+      const r = matrix[i][j];
+      const cell = document.createElement('div');
+      cell.className = 'hm-cell';
+      cell.style.background = correlationColor(r);
+      cell.textContent = r.toFixed(2);
+      cell.title = `${labels[i]} × ${labels[j]}\nr = ${r.toFixed(3)}`;
+      grid.appendChild(cell);
+    }
+  }
+  content.innerHTML = '';
+  content.appendChild(grid);
+
+  // 2. 颜色图例
+  const legend = document.createElement('div');
+  legend.className = 'heatmap-legend';
+  legend.innerHTML = `
+    <span>-1.0</span>
+    <span class="gradient"></span>
+    <span>+1.0</span>
+    <span style="margin-left:20px;">|r| ≥ 0.7 强联动｜0.4-0.7 中等｜< 0.4 弱</span>
+  `;
+  content.appendChild(legend);
+
+  // 3. 强联动对列表（只显示强度 ≥ medium）
+  const topPairs = (data.pairs || []).filter(p => p.strength !== 'none').slice(0, 6);
+  if (topPairs.length) {
+    const list = document.createElement('div');
+    list.className = 'pairs-list';
+    topPairs.forEach(p => {
+      const item = document.createElement('div');
+      item.className = `pair-item ${p.strength}`;
+      const rClass = p.r > 0 ? 'positive' : 'negative';
+      const arrow = p.r > 0 ? '↗' : '↘';
+      item.innerHTML = `
+        <span class="pair-r ${rClass}">${arrow} ${p.r.toFixed(2)}</span>
+        <strong>${escapeHtml(p.a_name)} × ${escapeHtml(p.b_name)}</strong>
+        <span style="color:#64748b;font-size:12px;">（n=${p.samples}）</span>
+        <div style="color:#94a3b8;font-size:12px;margin-top:4px;">
+          ${p.r > 0 ? '同步涨跌' : '此消彼长'}（${p.strength === 'strong' ? '强' : p.strength === 'medium' ? '中' : '弱'}联动）
+        </div>
+      `;
+      list.appendChild(item);
+    });
+    content.appendChild(list);
+  }
+}
+
+function correlationColor(r) {
+  // r: -1 ~ +1 → 颜色
+  // +1 深蓝, 0 中灰, -1 深红
+  if (r >= 0) {
+    // 0 ~ 1 → 灰 → 蓝
+    const t = r;
+    if (t < 0.4) return '#475569';
+    if (t < 0.7) return '#3b82f6';
+    return '#1d4ed8';
+  } else {
+    const t = -r;
+    if (t < 0.4) return '#475569';
+    if (t < 0.7) return '#f59e0b';
+    return '#dc2626';
+  }
+}
+
+async function loadCalendar() {
+  const loading = document.getElementById('calendar-loading');
+  const content = document.getElementById('calendar-content');
+  try {
+    const resp = await fetch('/api/calendar?days=30');
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.sectors || !data.sectors.length) {
+      loading.innerHTML = '⚠️ 暂无历史数据。';
+      return;
+    }
+    renderCalendar(data);
+    loading.style.display = 'none';
+    content.style.display = 'block';
+    if (window.va) window.va('track', 'p2_calendar', { days: data.days_count });
+  } catch (e) {
+    console.warn('[P2] 情绪日历加载失败:', e);
+    loading.innerHTML = `❌ 情绪日历加载失败：${escapeHtml(e.message)}`;
+  }
+}
+
+function renderCalendar(data) {
+  const content = document.getElementById('calendar-content');
+  // 显示有数据的板块
+  const sectors = data.sectors.filter(s => s.cells.some(c => c.value !== null));
+  if (!sectors.length) {
+    content.innerHTML = '<div class="ai-loading">⚠️ 所有板块都无历史数据</div>';
+    return;
+  }
+  const table = document.createElement('table');
+  table.className = 'calendar-table';
+  // thead
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  const cornerTh = document.createElement('th');
+  cornerTh.className = 'sector-name';
+  cornerTh.textContent = '板块';
+  headRow.appendChild(cornerTh);
+  data.days.forEach(d => {
+    const th = document.createElement('th');
+    const dt = new Date(d);
+    th.innerHTML = `${dt.getMonth() + 1}/${dt.getDate()}`;
+    th.title = d;
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+  table.appendChild(thead);
+  // tbody
+  const tbody = document.createElement('tbody');
+  sectors.forEach(s => {
+    const tr = document.createElement('tr');
+    const nameTd = document.createElement('td');
+    nameTd.className = 'sector-name';
+    const stats = s.stats;
+    nameTd.innerHTML = `
+      ${escapeHtml(s.name)}
+      <span style="color:#64748b;font-size:10px;display:block;">
+        avg ${stats.avg ?? '—'} · max ${stats.max ?? '—'}
+      </span>
+    `;
+    tr.appendChild(nameTd);
+    s.cells.forEach(c => {
+      const td = document.createElement('td');
+      td.className = `cal-cell ${c.level}`;
+      if (c.value !== null) {
+        td.innerHTML = `<span class="emoji">${c.emoji}</span><span class="value">${c.value}</span>`;
+        td.title = `${s.name} · ${c.date} · ${c.label} · 指数 ${c.value}`;
+      } else {
+        td.innerHTML = `<span class="emoji">·</span>`;
+        td.title = `${s.name} · ${c.date} · 无数据`;
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  content.innerHTML = '';
+  content.appendChild(table);
+  // 图例
+  const legend = document.createElement('div');
+  legend.className = 'calendar-legend';
+  legend.innerHTML = `
+    <div class="item"><span class="sw hot"></span>🔥 狂热 (≥70)</div>
+    <div class="item"><span class="sw warm"></span>🌤️ 升温 (50-70)</div>
+    <div class="item"><span class="sw cool"></span>⛅ 平淡 (30-50)</div>
+    <div class="item"><span class="sw cold"></span>❄️ 冷清 (<30)</div>
+    <div class="item"><span class="sw empty"></span>无数据</div>
+  `;
+  content.appendChild(legend);
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // 简易 toast 提示

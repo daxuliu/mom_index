@@ -131,7 +131,7 @@ def health():
 @app.route("/api/interpret")
 def api_interpret():
     """
-    LLM 今日市场情绪解读（基于指数 + 代表性小白帖）。
+    LLM 今日市场情绪解读（P2 升级：含历史趋势 context）。
     无 key 时自动降级到规则版。
     """
     try:
@@ -139,6 +139,7 @@ def api_interpret():
         from analyzer.index_calculator import (
             get_dashboard_data, SECTOR_NAMES,
         )
+        from history_store import get_sector_history
 
         date_str = request.args.get("date", "").strip() or None
         dashboard = get_dashboard_data()
@@ -155,6 +156,7 @@ def api_interpret():
 
         sector_indices = {"date": rec.get("date"), "sectors": {}}
         top_posts = {}
+        sectors_with_history = {}
         for key, sec in (rec.get("sectors") or {}).items():
             if not isinstance(sec, dict):
                 continue
@@ -165,17 +167,64 @@ def api_interpret():
                 "details": sec.get("details", {}),
             }
             top_posts[key] = sec.get("top_newbie_posts", [])[:3]
+            # P2: 拉 30 天历史作为 trend context
+            try:
+                hist = get_sector_history(key, days=30)
+                if hist:
+                    sectors_with_history[key] = hist
+            except Exception:
+                pass  # 历史不可用也不影响主流程
 
-        result = generate_interpret(sector_indices, top_posts)
+        result = generate_interpret(sector_indices, top_posts, sectors_with_history)
         return jsonify({
             "date": sector_indices["date"],
             "interpret": result["interpret"],
             "mode": result["mode"],
             "latency_ms": result.get("latency_ms", 0),
             "tokens": result.get("tokens", 0),
+            "history_used": result.get("history_used", False),
         })
     except Exception as e:
         return jsonify({"error": f"服务器错误: {str(e)[:200]}"}), 500
+
+
+@app.route("/api/correlation")
+def api_correlation():
+    """P2: 板块联动热力图数据"""
+    try:
+        from analyzer.correlation import compute_correlation_matrix
+        from analyzer.index_calculator import SECTOR_NAMES
+        from history_store import get_all_sectors_history
+        days = 30
+        try:
+            days = int(request.args.get("days", "30"))
+        except ValueError:
+            pass
+        history = get_all_sectors_history(days=days)
+        for k, rows in history.items():
+            for r in rows:
+                r["sector_name"] = SECTOR_NAMES.get(k, k)
+        return jsonify(compute_correlation_matrix(history, SECTOR_NAMES))
+    except Exception as e:
+        return jsonify({"error": f"计算失败: {str(e)[:200]}"}), 500
+
+
+@app.route("/api/calendar")
+def api_calendar():
+    """P2: 散户情绪日历数据"""
+    try:
+        from analyzer.calendar_data import compute_calendar
+        from analyzer.index_calculator import SECTOR_NAMES
+        from history_store import get_all_sectors_history
+        days = 30
+        try:
+            days = int(request.args.get("days", "30"))
+        except ValueError:
+            pass
+        history = get_all_sectors_history(days=days)
+        return jsonify(compute_calendar(history, SECTOR_NAMES, days=days))
+    except Exception as e:
+        return jsonify({"error": f"计算失败: {str(e)[:200]}"}), 500
 
 
 # ==================== 静态文件 (public/) ====================

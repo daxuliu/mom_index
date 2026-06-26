@@ -1,13 +1,14 @@
 """
 LLM 分析器单元测试
 ==================
-不依赖真实 DeepSeek key，纯本地跑关键词模式。
+本文件**只测关键词模式**（不依赖真实 DeepSeek key）。
+测 LLM 模式请用 test_llm_live.py（需要 .env 里有 DEEPSEEK_API_KEY）。
 跑法: python test_llm_analyzer.py
 """
 import os
 import sys
 
-# 强制走关键词模式（即使有 key 也不调 LLM）
+# 强制走关键词模式（即使有 key 也不调 LLM，专注测关键词逻辑）
 os.environ.pop("DEEPSEEK_API_KEY", None)
 sys.path.insert(0, os.path.dirname(__file__))
 

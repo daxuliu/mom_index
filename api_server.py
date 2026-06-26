@@ -511,13 +511,14 @@ class QueryHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": f"服务器错误: {e}"}, 500)
             return
 
-        # /api/interpret — LLM 今日市场解读
+        # /api/interpret — LLM 今日市场解读 (P2 升级：含历史趋势)
         if path == "/api/interpret":
             try:
                 from analyzer.interpret_generator import generate_interpret
                 from analyzer.index_calculator import (
                     get_dashboard_data, SECTOR_NAMES,
                 )
+                from history_store import get_sector_history
                 date_str = params.get("date", [None])[0]
                 # 默认用最新数据
                 dashboard = get_dashboard_data()
@@ -531,6 +532,7 @@ class QueryHandler(BaseHTTPRequestHandler):
                 # 整理 sector_indices
                 sector_indices = {"date": rec.get("date"), "sectors": {}}
                 top_posts = {}
+                sectors_with_history = {}
                 for key, sec in (rec.get("sectors") or {}).items():
                     if not isinstance(sec, dict):
                         continue
@@ -541,16 +543,63 @@ class QueryHandler(BaseHTTPRequestHandler):
                         "details": sec.get("details", {}),
                     }
                     top_posts[key] = sec.get("top_newbie_posts", [])[:3]
-                result = generate_interpret(sector_indices, top_posts)
+                    # P2: 拉 7 天历史作为 trend context
+                    hist = get_sector_history(key, days=30)
+                    if hist:
+                        sectors_with_history[key] = hist
+                result = generate_interpret(
+                    sector_indices, top_posts, sectors_with_history
+                )
                 self._send_json({
                     "date": sector_indices["date"],
                     "interpret": result["interpret"],
                     "mode": result["mode"],
                     "latency_ms": result.get("latency_ms", 0),
                     "tokens": result.get("tokens", 0),
+                    "history_used": result.get("history_used", False),
                 })
             except Exception as e:
                 self._send_json({"error": f"服务器错误: {e}"}, 500)
+            return
+
+        # P2: /api/correlation — 板块联动热力图
+        if path == "/api/correlation":
+            try:
+                from analyzer.correlation import compute_correlation_matrix
+                from analyzer.index_calculator import SECTOR_NAMES
+                from history_store import get_all_sectors_history
+                days = 30
+                try:
+                    days = int(params.get("days", ["30"])[0])
+                except ValueError:
+                    pass
+                history = get_all_sectors_history(days=days)
+                # 给历史加 sector_name
+                for k, rows in history.items():
+                    for r in rows:
+                        r["sector_name"] = SECTOR_NAMES.get(k, k)
+                result = compute_correlation_matrix(history, SECTOR_NAMES)
+                self._send_json(result)
+            except Exception as e:
+                self._send_json({"error": f"计算失败: {e}"}, 500)
+            return
+
+        # P2: /api/calendar — 散户情绪日历
+        if path == "/api/calendar":
+            try:
+                from analyzer.calendar_data import compute_calendar
+                from analyzer.index_calculator import SECTOR_NAMES
+                from history_store import get_all_sectors_history
+                days = 30
+                try:
+                    days = int(params.get("days", ["30"])[0])
+                except ValueError:
+                    pass
+                history = get_all_sectors_history(days=days)
+                result = compute_calendar(history, SECTOR_NAMES, days=days)
+                self._send_json(result)
+            except Exception as e:
+                self._send_json({"error": f"计算失败: {e}"}, 500)
             return
 
         # 板块历史（用于看板走势图）
