@@ -42,3 +42,8 @@ desktop.ini
 # Vercel
 .vercel/
 # Note: public/ 目录需被提交 (Vercel 静态托管)
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
