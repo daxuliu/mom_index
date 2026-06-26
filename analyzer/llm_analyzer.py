@@ -151,9 +151,10 @@ class AnalysisResult:
 
 _DEEPSEEK_CLIENT: Optional["OpenAI"] = None
 _DEEPSEEK_KEY: Optional[str] = None
-_DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-chat")
-# 注意：deepseek-chat alias → V4-Flash（2026-07-24 后会弃用）
-# 生产环境建议显式设 DEEPSEEK_MODEL=deepseek-v4-flash
+_DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
+# 默认走 deepseek-v4-flash（性价比第一，$0.14/1M input）
+# 2026-07-24 后 deepseek-chat alias 会弃用，提前切到 v4-flash
+# 备选：deepseek-v4-pro（旗舰，强推理，但贵 3 倍）
 
 
 def _get_deepseek_client() -> Optional["OpenAI"]:

@@ -162,7 +162,7 @@ def generate_interpret(sector_indices: Dict, top_posts_by_sector: Optional[Dict]
     t0 = time.time()
     try:
         resp = client.chat.completions.create(
-            model=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"),
+            model=os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash"),
             messages=[
                 {"role": "system", "content": _INTERPRET_SYSTEM},
                 {"role": "user", "content": prompt},
