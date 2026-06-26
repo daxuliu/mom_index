@@ -834,11 +834,11 @@ body {
   position: relative;
 }
 .qa-section::before {
-  content: '🤖 推荐';
+  content: '🌶️ 毒舌在线';
   position: absolute;
   top: -10px;
   right: 20px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #dc2626, #ea580c);
   color: white;
   padding: 3px 12px;
   border-radius: 12px;
@@ -1123,10 +1123,10 @@ body {
     <div id="search-result"></div>
   </div>
 
-  <!-- ==================== P2+: AI 投顾问答（首页最显眼位置 - 搜索框下方） ==================== -->
+  <!-- ==================== P2+: 老韭菜毒舌所（首页最显眼位置 - 搜索框下方） ==================== -->
   <section class="qa-section" id="qa-section">
     <h2>
-      <span>💬 AI 投顾问答</span>
+      <span>🌶️ 老韭菜毒舌所</span>
       <span class="badge">P2+ BETA</span>
     </h2>
 
@@ -1151,16 +1151,17 @@ body {
     </div>
 
     <div class="qa-toolbar">
-      <span id="qa-status">🟢 就绪</span>
+      <span id="qa-status">🟢 随时开骂</span>
       <button id="qa-clear-btn">🗑 清空对话</button>
     </div>
 
     <div class="qa-history" id="qa-history">
       <div class="qa-empty">
-        👋 你好！我是基于宝妈指数数据的智能投顾。<br>
-        我能基于<strong>实时散户情绪 + 22 天历史趋势 + 代表性小白帖</strong>回答你的问题。<br><br>
-        💡 我<strong>不会</strong>预测股价，只做"情绪温度 → 反向思考"分析。<br>
-        ⚠️ 我的回答不构成投资建议。
+        🍺 哟！来了！<br>
+        老韭菜我混 A 股十来年，<strong>不敢说稳赚</strong>，但<strong>敢说点真话</strong>。<br><br>
+        🌶️ 我能基于<strong>实时散户情绪 + 22 天历史趋势 + 真实小白帖</strong>，给你<strong>辛辣到位的反向思考</strong>。<br><br>
+        💡 <strong>别问我明天涨不涨</strong>，我只看<strong>情绪温度</strong>——过热就给你浇盆冷水，过冷就提醒你别错过。<br>
+        ⚠️ 赔了别找我，赚了也别谢我。
       </div>
     </div>
   </section>
@@ -2810,10 +2811,11 @@ function initQA() {
     sessionStorage.removeItem(QA_STORAGE_KEY);
     document.getElementById('qa-history').innerHTML = `
       <div class="qa-empty">
-        👋 你好！我是基于宝妈指数数据的智能投顾。<br>
-        我能基于<strong>实时散户情绪 + 22 天历史趋势 + 代表性小白帖</strong>回答你的问题。<br><br>
-        💡 我<strong>不会</strong>预测股价，只做"情绪温度 → 反向思考"分析。<br>
-        ⚠️ 我的回答不构成投资建议。
+        🍺 哟！又来了！<br>
+        老韭菜我混 A 股十来年，<strong>不敢说稳赚</strong>，但<strong>敢说点真话</strong>。<br><br>
+        🌶️ 我能基于<strong>实时散户情绪 + 22 天历史趋势 + 真实小白帖</strong>，给你<strong>辛辣到位的反向思考</strong>。<br><br>
+        💡 <strong>别问我明天涨不涨</strong>，我只看<strong>情绪温度</strong>——过热就给你浇盆冷水，过冷就提醒你别错过。<br>
+        ⚠️ 赔了别找我，赚了也别谢我。
       </div>
     `;
   });
@@ -3004,7 +3006,7 @@ async function sendQA(question) {
     historyEl.appendChild(buildQAMessage(aiMsg));
     historyEl.scrollTop = historyEl.scrollHeight;
 
-    status.textContent = data.mode === 'llm' ? '🟢 LLM 模式' : '🟡 规则降级（无 key 或调用失败）';
+    status.textContent = data.mode === 'llm' ? '🟢 老韭菜在线' : '🟡 罢工中（无 key）';
 
     // 上报 Vercel Analytics
     if (window.va) {
