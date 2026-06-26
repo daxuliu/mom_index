@@ -1061,14 +1061,21 @@ body {
   color: #e2e8f0;
   padding: 12px 16px;
   border-radius: 8px 8px 8px 4px;   /* 左下小尖角指向头像 */
-  line-height: 1.7;
   font-size: 14px;
-  white-space: pre-wrap;
-  word-break: break-word;            /* 中文长词/URL 换行 */
-  overflow-wrap: anywhere;           /* 兜底 */
   flex: 1;
   min-width: 0;                      /* flex item 收缩关键 */
   max-width: 100%;
+  display: flex;                     /* 内部 column 布局，让 meta 在下方 */
+  flex-direction: column;
+  gap: 8px;
+}
+/* 气泡内容：负责 markdown 文本 */
+.qa-msg .bubble-content {
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
 }
 
 /* 用户消息：靠右，气泡限宽 75%（短消息不被撑开浪费空间） */
@@ -1080,13 +1087,18 @@ body {
   color: #f1f5f9;
   padding: 12px 16px;
   border-radius: 8px 8px 4px 8px;   /* 右下小尖角指向头像 */
-  line-height: 1.7;
   font-size: 14px;
+  max-width: 75%;                    /* 短消息不会被拉宽 */
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qa-msg.user .bubble-content {
+  line-height: 1.7;
   white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
-  max-width: 75%;                    /* 短消息不会被拉宽 */
-  min-width: 0;
 }
 /* 用户 meta 元数据靠右 */
 .qa-msg.user .meta { justify-content: flex-end; text-align: right; }
@@ -1094,12 +1106,13 @@ body {
 .qa-msg .bubble strong { color: #fbbf24; }
 .qa-msg .bubble em { color: #94a3b8; font-style: normal; font-size: 12px; }
 .qa-msg .meta {
-  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);  /* 视觉分隔 meta 区 */
   font-size: 11px;
-  color: #64748b;
+  color: #94a3b8;
   display: flex;
-  flex-wrap: wrap;                   /* 元数据可换行 */
-  gap: 12px;
+  flex-wrap: wrap;
+  gap: 10px 14px;                    /* row/col gap */
 }
 .qa-msg .meta .mode-llm { color: #10b981; }
 .qa-msg .meta .mode-fallback { color: #f59e0b; }
@@ -3009,17 +3022,20 @@ function buildQAMessage(msg) {
   avatar.textContent = msg.role === 'user' ? '👤' : '🤖';
   const bubble = document.createElement('div');
   bubble.className = 'bubble';
-  // Markdown 渲染：粗体 / 标题 / 引用 / 列表 / 表格 / 段落
-  bubble.innerHTML = renderMarkdown(msg.text);
-  wrap.appendChild(avatar);
-  wrap.appendChild(bubble);
+  // 回答文本（独立 div，方便 meta 跟在下面）
+  const content = document.createElement('div');
+  content.className = 'bubble-content';
+  content.innerHTML = renderMarkdown(msg.text);
+  bubble.appendChild(content);
   if (msg.meta) {
+    // 关键：把 meta 放进 bubble 内部（在内容下方），不再是 wrap 的第 3 个 flex 子元素
     const meta = document.createElement('div');
     meta.className = 'meta';
-    meta.style.marginLeft = '42px';
     meta.innerHTML = msg.meta;
-    wrap.appendChild(meta);
+    bubble.appendChild(meta);
   }
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
   return wrap;
 }
 
