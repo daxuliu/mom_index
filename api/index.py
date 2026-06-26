@@ -227,6 +227,36 @@ def api_calendar():
         return jsonify({"error": f"计算失败: {str(e)[:200]}"}), 500
 
 
+@app.route("/api/qa")
+def api_qa():
+    """P2+: AI 投顾问答
+    GET /api/qa?question=xxx
+    返回基于当前指数 + 历史的智能答复
+    """
+    try:
+        from analyzer.qa_engine import answer_question
+        from analyzer.index_calculator import get_dashboard_data
+        from history_store import get_sector_history
+
+        question = request.args.get("question", "").strip()
+        if not question:
+            return jsonify({"error": "缺少 question 参数"}), 400
+
+        dashboard = get_dashboard_data()
+        latest = dashboard.get("latest")
+        if not latest:
+            return jsonify({"error": "无指数数据"}), 503
+
+        result = answer_question(
+            question=question,
+            latest=latest,
+            history_getter=get_sector_history,
+        )
+        return jsonify(result)
+    except Exception as e:
+        return jsonify({"error": f"服务器错误: {str(e)[:200]}"}), 500
+
+
 # ==================== 静态文件 (public/) ====================
 STATIC_DIR = os.path.join(ROOT, "public")
 

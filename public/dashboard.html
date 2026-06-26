@@ -820,6 +820,166 @@ body {
 .calendar-legend .item .sw.cool { background: #475569; }
 .calendar-legend .item .sw.cold { background: #1e40af; }
 .calendar-legend .item .sw.empty { background: #0f172a; border: 1px solid #334155; }
+
+/* ==================== P2+: AI 投顾问答 ==================== */
+.qa-section {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px auto;
+  max-width: 1280px;
+  color: #e2e8f0;
+}
+.qa-section h2 {
+  font-size: 20px;
+  margin: 0 0 16px 0;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qa-section h2 .badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+.qa-quick-prompts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.qa-quick-prompt {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.qa-quick-prompt:hover {
+  background: #334155;
+  border-color: #6366f1;
+  color: #f1f5f9;
+}
+.qa-input-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.qa-input-row input {
+  flex: 1;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.qa-input-row input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+.qa-input-row button {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  padding: 0 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.qa-input-row button:hover:not(:disabled) { opacity: 0.9; }
+.qa-input-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+.qa-history {
+  max-height: 600px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.qa-msg {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.qa-msg .avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.qa-msg.user .avatar { background: #6366f1; }
+.qa-msg.ai .avatar   { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.qa-msg .bubble {
+  background: #1e293b;
+  padding: 12px 16px;
+  border-radius: 8px;
+  line-height: 1.7;
+  font-size: 14px;
+  white-space: pre-wrap;
+  flex: 1;
+}
+.qa-msg.user .bubble {
+  background: #312e81;
+  color: #f1f5f9;
+}
+.qa-msg .bubble strong { color: #fbbf24; }
+.qa-msg .bubble em { color: #94a3b8; font-style: normal; font-size: 12px; }
+.qa-msg .meta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.qa-msg .meta .mode-llm { color: #10b981; }
+.qa-msg .meta .mode-fallback { color: #f59e0b; }
+.qa-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #64748b;
+  font-size: 14px;
+}
+.qa-loading {
+  text-align: center;
+  color: #64748b;
+  padding: 12px;
+  font-size: 13px;
+}
+.qa-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #64748b;
+}
+.qa-toolbar button {
+  background: transparent;
+  border: 1px solid #334155;
+  color: #94a3b8;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.qa-toolbar button:hover { background: #1e293b; color: #e2e8f0; }
 </style>
 <!-- Vercel Web Analytics -->
 <script>
@@ -945,6 +1105,48 @@ body {
       <div class="ai-loading">⏳ 加载情绪日历…</div>
     </div>
     <div class="calendar-wrap" id="calendar-content" style="display:none;"></div>
+  </section>
+
+  <!-- ==================== P2+: AI 投顾问答 ==================== -->
+  <section class="qa-section" id="qa-section">
+    <h2>
+      <span>💬 AI 投顾问答</span>
+      <span class="badge">P2+ BETA</span>
+    </h2>
+
+    <div class="qa-quick-prompts">
+      <button class="qa-quick-prompt" data-q="现在该不该买纳指？">💡 现在该不该买纳指？</button>
+      <button class="qa-quick-prompt" data-q="半导体和黄金哪个更适合现在入手？">💡 半导体 vs 黄金</button>
+      <button class="qa-quick-prompt" data-q="CPO 还能追吗？">💡 CPO 还能追吗？</button>
+      <button class="qa-quick-prompt" data-q="今天哪个板块最危险？">💡 今天哪个板块最危险？</button>
+      <button class="qa-quick-prompt" data-q="今天哪个板块有机会？">💡 今天哪个板块有机会？</button>
+      <button class="qa-quick-prompt" data-q="市场整体过热吗？">💡 市场整体过热吗？</button>
+    </div>
+
+    <div class="qa-input-row">
+      <input
+        type="text"
+        id="qa-input"
+        placeholder="问点什么…（如：现在买纳指合适吗？）"
+        maxlength="200"
+        autocomplete="off"
+      >
+      <button id="qa-send-btn">发送</button>
+    </div>
+
+    <div class="qa-toolbar">
+      <span id="qa-status">🟢 就绪</span>
+      <button id="qa-clear-btn">🗑 清空对话</button>
+    </div>
+
+    <div class="qa-history" id="qa-history">
+      <div class="qa-empty">
+        👋 你好！我是基于宝妈指数数据的智能投顾。<br>
+        我能基于<strong>实时散户情绪 + 22 天历史趋势 + 代表性小白帖</strong>回答你的问题。<br><br>
+        💡 我<strong>不会</strong>预测股价，只做"情绪温度 → 反向思考"分析。<br>
+        ⚠️ 我的回答不构成投资建议。
+      </div>
+    </div>
   </section>
 
   <!-- Top 小白帖 -->
@@ -2218,6 +2420,8 @@ async function loadP2Features() {
   loadAIInterpret();
   loadCorrelation();
   loadCalendar();
+  // P2+: AI 投顾问答
+  initQA();
 }
 
 async function loadAIInterpret() {
@@ -2476,6 +2680,201 @@ function escapeHtml(s) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+// ============ P2+: AI 投顾问答 ============
+const QA_STORAGE_KEY = '__qa_history__';
+const QA_MAX_HISTORY = 20;
+
+function loadQAHistory() {
+  try {
+    const raw = sessionStorage.getItem(QA_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveQAHistory(history) {
+  try {
+    sessionStorage.setItem(QA_STORAGE_KEY, JSON.stringify(history.slice(-QA_MAX_HISTORY)));
+  } catch (e) { /* quota exceeded etc, ignore */ }
+}
+
+function initQA() {
+  // 恢复历史对话
+  const history = loadQAHistory();
+  if (history.length) renderQAHistory();
+
+  // 事件绑定
+  const input = document.getElementById('qa-input');
+  const sendBtn = document.getElementById('qa-send-btn');
+  const clearBtn = document.getElementById('qa-clear-btn');
+
+  const sendHandler = () => {
+    const q = input.value.trim();
+    if (!q) { input.focus(); return; }
+    sendQA(q);
+    input.value = '';
+  };
+  sendBtn.addEventListener('click', sendHandler);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendHandler();
+    }
+  });
+  clearBtn.addEventListener('click', () => {
+    if (!confirm('清空当前对话？')) return;
+    sessionStorage.removeItem(QA_STORAGE_KEY);
+    document.getElementById('qa-history').innerHTML = `
+      <div class="qa-empty">
+        👋 你好！我是基于宝妈指数数据的智能投顾。<br>
+        我能基于<strong>实时散户情绪 + 22 天历史趋势 + 代表性小白帖</strong>回答你的问题。<br><br>
+        💡 我<strong>不会</strong>预测股价，只做"情绪温度 → 反向思考"分析。<br>
+        ⚠️ 我的回答不构成投资建议。
+      </div>
+    `;
+  });
+
+  // 快捷问题点击
+  document.querySelectorAll('.qa-quick-prompt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.getAttribute('data-q');
+      if (!q) return;
+      input.value = q;
+      sendHandler();
+    });
+  });
+}
+
+function renderQAHistory() {
+  const history = loadQAHistory();
+  const container = document.getElementById('qa-history');
+  if (!history.length) {
+    container.innerHTML = `<div class="qa-empty">还没有对话，快来试试吧～</div>`;
+    return;
+  }
+  container.innerHTML = '';
+  history.forEach(msg => {
+    container.appendChild(buildQAMessage(msg));
+  });
+  // 滚到底
+  container.scrollTop = container.scrollHeight;
+}
+
+function buildQAMessage(msg) {
+  const wrap = document.createElement('div');
+  wrap.className = `qa-msg ${msg.role}`;
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.textContent = msg.role === 'user' ? '👤' : '🤖';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  // 把 **xxx** 转 <strong>
+  bubble.innerHTML = escapeHtml(msg.text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  wrap.appendChild(avatar);
+  wrap.appendChild(bubble);
+  if (msg.meta) {
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.style.marginLeft = '42px';
+    meta.innerHTML = msg.meta;
+    wrap.appendChild(meta);
+  }
+  return wrap;
+}
+
+async function sendQA(question) {
+  const history = loadQAHistory();
+  const sendBtn = document.getElementById('qa-send-btn');
+  const input = document.getElementById('qa-input');
+  const status = document.getElementById('qa-status');
+  const historyEl = document.getElementById('qa-history');
+
+  // 1. 加用户消息
+  history.push({ role: 'user', text: question, ts: Date.now() });
+  saveQAHistory(history);
+  // 第一次发消息时清空欢迎语
+  if (historyEl.querySelector('.qa-empty')) historyEl.innerHTML = '';
+  historyEl.appendChild(buildQAMessage({ role: 'user', text: question }));
+  historyEl.scrollTop = historyEl.scrollHeight;
+
+  // 2. 加 loading 占位
+  const loadingWrap = document.createElement('div');
+  loadingWrap.className = 'qa-msg ai';
+  loadingWrap.id = '__qa_loading__';
+  loadingWrap.innerHTML = `
+    <div class="avatar">🤖</div>
+    <div class="bubble">
+      <div class="qa-loading">⏳ AI 正在思考…</div>
+    </div>
+  `;
+  historyEl.appendChild(loadingWrap);
+  historyEl.scrollTop = historyEl.scrollHeight;
+
+  // 3. 状态
+  sendBtn.disabled = true;
+  input.disabled = true;
+  status.textContent = '⏳ 思考中…';
+
+  // 4. 调 API
+  const t0 = performance.now();
+  try {
+    const resp = await fetch('/api/qa?question=' + encodeURIComponent(question));
+    const data = await resp.json();
+    const latency = Math.round(performance.now() - t0);
+    if (data.error) throw new Error(data.error);
+
+    // 5. 替换 loading 为真实回答
+    const modeClass = data.mode === 'llm' ? 'mode-llm' : 'mode-fallback';
+    const modeText = data.mode === 'llm' ? '🟢 LLM' : '🟡 规则降级';
+    const sectors = (data.mentioned_sectors || []).join(', ') || '无具体板块';
+    const ctxStats = data.context_used || {};
+    const meta = `
+      <span class="${modeClass}">${modeText}</span>
+      <span>📊 板块: ${escapeHtml(sectors)}</span>
+      <span>📈 历史: ${ctxStats.history_days || 0} 天</span>
+      <span>📝 引用小白帖: ${ctxStats.posts_count || 0} 条</span>
+      <span>⏱️ ${data.latency_ms || latency} ms</span>
+      <span>💎 ${data.tokens || 0} tokens</span>
+    `;
+    const aiMsg = {
+      role: 'ai',
+      text: data.answer,
+      meta,
+      mode: data.mode,
+      ts: Date.now(),
+    };
+    history.push(aiMsg);
+    saveQAHistory(history);
+
+    // 替换 loading
+    loadingWrap.remove();
+    historyEl.appendChild(buildQAMessage(aiMsg));
+    historyEl.scrollTop = historyEl.scrollHeight;
+
+    status.textContent = data.mode === 'llm' ? '🟢 LLM 模式' : '🟡 规则降级（无 key 或调用失败）';
+
+    // 上报 Vercel Analytics
+    if (window.va) {
+      window.va('track', 'p2_qa', {
+        mode: data.mode,
+        sectors_count: (data.mentioned_sectors || []).length,
+        latency_ms: data.latency_ms || latency,
+      });
+    }
+  } catch (e) {
+    console.error('[qa] 调用失败:', e);
+    const errMsg = `❌ 抱歉，AI 思考失败：${escapeHtml(e.message)}\n\n请稍后再试，或检查网络。`;
+    loadingWrap.remove();
+    const errWrap = buildQAMessage({ role: 'ai', text: errMsg });
+    historyEl.appendChild(errWrap);
+    historyEl.scrollTop = historyEl.scrollHeight;
+    status.textContent = '❌ 出错了';
+  } finally {
+    sendBtn.disabled = false;
+    input.disabled = false;
+    input.focus();
+  }
 }
 
 // 简易 toast 提示

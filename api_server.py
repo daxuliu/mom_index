@@ -602,6 +602,34 @@ class QueryHandler(BaseHTTPRequestHandler):
                 self._send_json({"error": f"计算失败: {e}"}, 500)
             return
 
+        # P2+: /api/qa — AI 投顾问答
+        if path == "/api/qa":
+            try:
+                from analyzer.qa_engine import answer_question
+                from analyzer.index_calculator import get_dashboard_data
+                from history_store import get_sector_history
+
+                question = params.get("question", [""])[0].strip()
+                if not question:
+                    self._send_json({"error": "缺少 question 参数"}, 400)
+                    return
+
+                dashboard = get_dashboard_data()
+                latest = dashboard.get("latest")
+                if not latest:
+                    self._send_json({"error": "无指数数据"}, 503)
+                    return
+
+                result = answer_question(
+                    question=question,
+                    latest=latest,
+                    history_getter=get_sector_history,
+                )
+                self._send_json(result)
+            except Exception as e:
+                self._send_json({"error": f"服务器错误: {e}"}, 500)
+            return
+
         # 板块历史（用于看板走势图）
         if path == "/api/history" and "sector" in params:
             sector = params.get("sector", [""])[0]
