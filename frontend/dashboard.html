@@ -657,7 +657,12 @@ body {
   .qa-msg .bubble h4 { font-size: 14px !important; }
   .qa-msg .bubble .md-table { font-size: 12px !important; }
   .qa-msg .bubble .md-table th, .qa-msg .bubble .md-table td { padding: 5px 8px !important; }
-  .qa-msg .meta { font-size: 10px !important; margin-left: 36px !important; }
+  .qa-msg .meta { font-size: 10px !important; }
+  /* 768px 平板：用户气泡限宽 70%（更紧凑） */
+  .qa-msg.user .bubble { max-width: 70% !important; }
+  /* AI 头像在 meta 上的 margin 也不再需要（meta 在自己行） */
+  .qa-msg.ai .meta { margin-left: 0 !important; }
+  .qa-msg.user .meta { margin-left: 0 !important; }
 
   /* AI 智能解读区 */
   .ai-text { font-size: 14px !important; line-height: 1.7 !important; }
@@ -1034,6 +1039,8 @@ body {
   display: flex;
   gap: 10px;
   align-items: flex-start;
+  /* 关键：让气泡内容可以正确收缩 + 避免内部元素撑爆容器 */
+  min-width: 0;
 }
 .qa-msg .avatar {
   width: 32px;
@@ -1047,19 +1054,43 @@ body {
 }
 .qa-msg.user .avatar { background: #6366f1; }
 .qa-msg.ai .avatar   { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
-.qa-msg .bubble {
+
+/* AI 消息：靠左，气泡占满剩余宽度（让长回答充分利用空间） */
+.qa-msg.ai .bubble {
   background: #1e293b;
+  color: #e2e8f0;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 8px 8px 8px 4px;   /* 左下小尖角指向头像 */
   line-height: 1.7;
   font-size: 14px;
   white-space: pre-wrap;
+  word-break: break-word;            /* 中文长词/URL 换行 */
+  overflow-wrap: anywhere;           /* 兜底 */
   flex: 1;
+  min-width: 0;                      /* flex item 收缩关键 */
+  max-width: 100%;
+}
+
+/* 用户消息：靠右，气泡限宽 75%（短消息不被撑开浪费空间） */
+.qa-msg.user {
+  flex-direction: row-reverse;       /* 头像在右 */
 }
 .qa-msg.user .bubble {
   background: #312e81;
   color: #f1f5f9;
+  padding: 12px 16px;
+  border-radius: 8px 8px 4px 8px;   /* 右下小尖角指向头像 */
+  line-height: 1.7;
+  font-size: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  max-width: 75%;                    /* 短消息不会被拉宽 */
+  min-width: 0;
 }
+/* 用户 meta 元数据靠右 */
+.qa-msg.user .meta { justify-content: flex-end; text-align: right; }
+
 .qa-msg .bubble strong { color: #fbbf24; }
 .qa-msg .bubble em { color: #94a3b8; font-style: normal; font-size: 12px; }
 .qa-msg .meta {
@@ -1067,8 +1098,8 @@ body {
   font-size: 11px;
   color: #64748b;
   display: flex;
+  flex-wrap: wrap;                   /* 元数据可换行 */
   gap: 12px;
-  flex-wrap: wrap;
 }
 .qa-msg .meta .mode-llm { color: #10b981; }
 .qa-msg .meta .mode-fallback { color: #f59e0b; }
@@ -1138,15 +1169,32 @@ body {
   border-radius: 3px;
   font-family: monospace;
   font-size: 13px;
+  word-break: break-all;                /* 防止 inline code 长字符串撑爆 */
+  overflow-wrap: anywhere;
 }
 .qa-msg .bubble .md-table {
+  display: block;                       /* 关键：让表格能横向滚动 */
   width: 100%;
+  overflow-x: auto;                     /* 表格内容超出时横滚 */
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 10px 0;
   font-size: 13px;
   background: #0f172a;
   border-radius: 6px;
-  overflow: hidden;
+}
+.qa-msg .bubble pre {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #0f172a;
+  color: #fbbf24;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 13px;
+  white-space: pre;                     /* 代码块保持原格式不换行 */
 }
 .qa-msg .bubble .md-table th {
   background: #1e293b;
